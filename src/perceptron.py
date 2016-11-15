@@ -7,6 +7,7 @@
 
 import numpy as np
 import threshold as th
+import utils as u
 
 class Perceptron(object):
     """Classic perceptron implementation."""
@@ -35,16 +36,10 @@ class Perceptron(object):
 
         # Added to increase flexibility when testing with different epochs
         # values, without the need of defining new perceptrons.
-        if alternate_epochs:
+        if alternate_number_of_epochs:
             self.epochs = alternate_number_of_epochs
 
-        data_set = np.array(data_set)
-        number_of_samples, dimension = data_set.shape
-
-        # Generate the augmented data set, adding a column of '1's
-        augmented_data_set = np.ones((number_of_samples, dimension + 1))
-        augmented_data_set[:,:-1] = data_set
-
+        augmented_data_set, dimension = u.to_augmented_vector(data_set)
         self.w = 1e-6 * np.random.rand(dimension + 1)
 
         for _ in xrange(self.epochs):
@@ -63,12 +58,10 @@ class Perceptron(object):
             input_sample: Input vector containing samples values.
 
         Returns:
-            Returns the output of the activation function
+            Returns the output of the activation function.
         """
-        input_sample = np.array(input_sample)
-        length = input_sample.size
-        augmented_sample = np.ones((1, length + 1))
-        augmented_sample[:,:-1] = input_sample
+
+        augmented_sample, _ = np.array(u.to_augmented_vector(input_sample))
 
         if alternate_activation_function == "raw":
             return np.dot(self.w, augmented_sample.T)

@@ -1,3 +1,2 @@
 Dependencies:
-  - numpy
-  
+  - numpy: pip install --user numpy
