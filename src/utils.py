@@ -7,7 +7,7 @@
 
 import numpy as np
 
-def to_augmented_vector(data):
+def to_augmented_array(data):
     """Generate the augmented data set, adding a column of '1's
 
     Args:

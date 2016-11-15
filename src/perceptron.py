@@ -39,7 +39,7 @@ class Perceptron(object):
         if alternate_number_of_epochs:
             self.epochs = alternate_number_of_epochs
 
-        augmented_data_set, dimension = u.to_augmented_vector(data_set)
+        augmented_data_set, dimension = u.to_augmented_array(data_set)
         self.w = 1e-6 * np.random.rand(dimension + 1)
 
         for _ in xrange(self.epochs):
@@ -61,7 +61,7 @@ class Perceptron(object):
             Returns the output of the activation function.
         """
 
-        augmented_sample, _ = np.array(u.to_augmented_vector(input_sample))
+        augmented_sample, _ = np.array(u.to_augmented_array(input_sample))
 
         if alternate_activation_function == "raw":
             return np.dot(self.w, augmented_sample.T)
