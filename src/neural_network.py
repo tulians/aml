@@ -33,6 +33,8 @@ class NeuralNetwork(object):
                                                   number_of_outputs,
                                                   number_of_hidden_layers,
                                                   units_per_hidden_layer)
+# TODO: DONT GENERATE ALL AT ONCE, MAKE LAYERS AND CONNECT LAYERS!
+
 # TODO: Generate an array of different perceptron objects more efficiently.
 # TODO: Set the weights vector in each new instance. ITS VARIABLE! Initialize
 #       weights and perceptrons in the same method!
