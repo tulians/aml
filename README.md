@@ -4,7 +4,7 @@
 ### Example
 Imagine you need to learn a function like AND, OR, NOT, or any linearly separable boolean function, *aml* provides a **Perceptron** class that is able to generate a separation surface among both classes. Taking the AND function as an example, the weights of the separation surface can be coded computed with these few lines:
 
-```
+```python
 >>> import perceptron as p
 >>> per = p.Perceptron(activation_function = "unitstep")
 >>> data = [[0,0],[0,1],[1,0],[1,1]]
