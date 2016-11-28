@@ -10,7 +10,7 @@ import threshold as th
 import perceptron as p
 
 class NeuralNetwork(object):
-    """All against all neural network architecture."""
+    """All against all neural rectangular network architecture."""
 
     def __init__(self, number_of_inputs=2, number_of_outputs=1,
                  number_of_hidden_layers=1, units_per_hidden_layer=2,
@@ -29,52 +29,50 @@ class NeuralNetwork(object):
         else:
             self.activation_function = th.Sigmoid()
 
-        self.synapses_weights = self.init_weights(number_of_inputs,
-                                                  number_of_outputs,
-                                                  number_of_hidden_layers,
-                                                  units_per_hidden_layer)
-# TODO: DONT GENERATE ALL AT ONCE, MAKE LAYERS AND CONNECT LAYERS!
+        self.layers = self._generate_layers()
 
-# TODO: Generate an array of different perceptron objects more efficiently.
-# TODO: Set the weights vector in each new instance. ITS VARIABLE! Initialize
-#       weights and perceptrons in the same method!
-        total_number_of_units = ((number_of_hidden_layers *
-                                  units_per_hidden_layer) + number_of_outputs)
-        self.hidden_layers_units = []
-        for unit in xrange(total_number_of_units):
-            self.hidden_layers_units.append(p.Perceptron())
-
-        print len(self.synapses_weights), len(self.hidden_layers_units)
-
-    def init_weights(self, number_of_inputs, number_of_outputs,
-                     number_of_hidden_layers, units_per_hidden_layer):
-        """Initializes the weights of the network synapses.
+    def _generate_layers(self):
+        """Generates the hidden layers and the output layer of the network.
 
         Args:
-            number_of_inputs: Number of input weights to the first hidden layer.
-            number_of_outputs: Number of output weights from the last hidden
-                               layer.
-            number_of_hidden_layers: Number of layers of hidden units.
-            units_per_hidden_layer: Number of processing units per hidden layer.
+            No arguments.
 
         Returns:
-            w: Initial neural network synapses weights.
+            layers: hidden layers and output layer of the network.
         """
 
-        number_of_hidden_weights = (pow(units_per_hidden_layer, 2) *
-                                    (number_of_hidden_layers - 1))
+        weights = []
+        # Generate the weights from the input layer to the 1st hidden layer.
+        for first_layer_unit in xrange(self.units_per_hidden_layer):
+            weights.append(2 * np.random.rand(self.number_of_inputs) - 1)
+        # Generate the weights in the hidden layers.
+        for hidden_layer in xrange(1, self.number_of_hidden_layers):
+            for hidden_layer_unit in xrange(self.units_per_hidden_layer):
+                weights.append(2 * np.random.rand(self.units_per_hidden_layer) - 1)
+        # Generate the weights from the last hidden layer to the output layer.
+        for output_layer_unit in xrange(self.number_of_outputs):
+            weights.append(2 * np.random.rand(self.units_per_hidden_layer) - 1)
 
-        number_of_input_weights = number_of_inputs * units_per_hidden_layer
+        layers = []
+        # Generate the hidden layers perceptrons
+        for layer_id in xrange(self.number_of_hidden_layers):
+            layer = self.NeuronLayer(weights, self.units_per_hidden_layer,
+                                     self.learning_factor, self.epochs,
+                                     self.activation_function)
+            layers.append(layer)
+        # Generate the output layer perceptron(s).
+        output_layer = self.NeuronLayer(weights[-self.number_of_outputs:],
+                                        self.number_of_outputs,
+                                        self.learning_factor, self.epochs,
+                                        self.activation_function)
+        layers.append(output_layer)
 
-        number_of_output_weights = number_of_outputs * units_per_hidden_layer
+        return layers
 
-        total_number_of_weights = (number_of_input_weights +
-                                   number_of_hidden_weights +
-                                   number_of_output_weights)
+    def _backpropagation(self):
+        pass
 
-        return 2 * np.random.rand(total_number_of_weights) - 1
-
-    def feedforward(self, input_sample):
+    def _feedforward(self, input_sample):
         """Computes the output of using 'input_sample' as network input.
 
         Args:
@@ -83,21 +81,18 @@ class NeuralNetwork(object):
         Returns:
             output: output value of the feedforward procedure.
         """
-        output = []
-# TODO: This section must be completed only when Perceptrons are initialized
-#       with their respective weights.
-        # Perform the dot product of the inputs with the first hidden layer
-        #first_layer_units = self.hidden_layers_nodes[:units_per_hidden_layer]
-        #for first_hidden_layer_unit in first_hidden_layer_units:
-        #    output.append(first_hidden_layer_unit.output(input_sample))
+# TODO: ESTO HACELO BIEN. ARMÁ UNA RED QUE SEA DE TAMAÑO ALEATORIO.
+        units_outputs = []
+        layer_number = 0
+        for layer_i in self.layers:
+            layer_i_outputs = []
+            layer_number += 1
+            for unit in layer_i.layer:
+                layer_i_outputs.append(unit.output(input_sample))
+            units_outputs.append(layer_i_outputs)
+            input_sample = units_outputs[layer_number - 1]
+        print units_outputs
 
-# TODO: Erase this section when done.
-        # Perform the dot products of the inputs & outputs of hidden layers
-        #start = units_per_hidden_layer
-        #end = (units_per_hidden_layer - 1) * number_of_hidden_layers
-        #for hidden_unit in self.hidden_layers_nodes[start:end]:
-        #    pass
-        # Perform the dot product of the last layer outputs with the output layer
 
     def train(self, training_sample, expected_output):
         """Computes the components of the weights vector 'w' across all layers.
@@ -109,4 +104,35 @@ class NeuralNetwork(object):
         Returns:
             w: Weights vector, containing the weights of all the synapses.
         """
-        predicted_output = self.feedforward(training_sample)
+        predicted_output = self._feedforward(training_sample)
+
+
+    class NeuronLayer(object):
+        """Inner class that generates a layer of perceptrons."""
+
+        def __init__(self, weights, units_per_layer, learning_factor,
+                     epochs, activation_function):
+
+            self.weights = weights
+            self.units_per_layer = units_per_layer
+            self.learning_factor = learning_factor
+            self.epochs = epochs
+            self.activation_function = activation_function
+
+            self.layer = self._generate_layer()
+
+        def _generate_layer(self):
+            """Generates a layer of perceptrons.
+
+            Args:
+                No arguments.
+
+            Returns:
+                layer: column of perceptrons with the given characteristics.
+            """
+
+            layer = []
+            for unit in xrange(self.units_per_layer):
+                layer.append(p.Perceptron(self.weights[unit], self.learning_factor,
+                                          self.epochs, self.activation_function))
+            return layer

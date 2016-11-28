@@ -14,6 +14,7 @@ class Perceptron(object):
 
     def __init__(self, input_weights = None, learning_factor=1, epochs=50,
                  activation_function="sigmod"):
+
         self.w = np.array(input_weights)
         self.learning_factor = learning_factor
         self.epochs = epochs
@@ -40,7 +41,7 @@ class Perceptron(object):
             self.epochs = alternate_number_of_epochs
 
         augmented_data_set, dimension = u.to_augmented_array(data_set)
-        self.w = 1e-6 * np.random.rand(dimension + 1)
+        self.w = 2 * np.random.rand(dimension + 1) - 1
 
         for _ in xrange(self.epochs):
             for sample, target in zip(augmented_data_set, labels):
