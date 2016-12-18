@@ -10,17 +10,15 @@ import threshold as th
 import perceptron as p
 
 class NeuralNetwork(object):
-    """All against all neural rectangular network architecture."""
+    """Layer against layer neural network architecture."""
 
     def __init__(self, number_of_inputs=2, number_of_outputs=1,
-                 number_of_hidden_layers=1, units_per_hidden_layer=2,
-                 learning_factor=1, epochs=50, activation_function="sigmod"):
+                 hidden_layers=[2], learning_factor=1, epochs=50,
+                 activation_function="sigmod"):
 
         self.number_of_inputs = number_of_inputs
         self.number_of_outputs = number_of_outputs
 
-        self.number_of_hidden_layers = number_of_hidden_layers
-        self.units_per_hidden_layer = units_per_hidden_layer
         self.learning_factor = learning_factor
         self.epochs = epochs
 
@@ -29,13 +27,14 @@ class NeuralNetwork(object):
         else:
             self.activation_function = th.Sigmoid()
 
-        self.layers = self._generate_layers()
+        self.layers = self._generate_layers(hidden_layers)
+        # TODO: ADD EXCEPTIONS IN CASE ANY PARAMETER IS WRONG.
 
-    def _generate_layers(self):
+    def _generate_layers(self, hidden_layers):
         """Generates the hidden layers and the output layer of the network.
 
         Args:
-            No arguments.
+            hidden_layers: list with the size of each hidden layer.
 
         Returns:
             layers: hidden layers and output layer of the network.
@@ -43,20 +42,25 @@ class NeuralNetwork(object):
 
         weights = []
         # Generate the weights from the input layer to the 1st hidden layer.
-        for first_layer_unit in xrange(self.units_per_hidden_layer):
+        for first_layer_unit in xrange(hidden_layers[0]):
             weights.append(2 * np.random.rand(self.number_of_inputs) - 1)
         # Generate the weights in the hidden layers.
-        for hidden_layer in xrange(1, self.number_of_hidden_layers):
-            for hidden_layer_unit in xrange(self.units_per_hidden_layer):
-                weights.append(2 * np.random.rand(self.units_per_hidden_layer) - 1)
+        for hidden_layer in xrange(len(hidden_layers) - 1):
+            for hidden_layer_unit in xrange(hidden_layers[hidden_layer]):
+                weights.append(2 * np.random.rand(
+                    hidden_layers[hidden_layer + 1]) - 1)
         # Generate the weights from the last hidden layer to the output layer.
         for output_layer_unit in xrange(self.number_of_outputs):
-            weights.append(2 * np.random.rand(self.units_per_hidden_layer) - 1)
+            weights.append(2 * np.random.rand(
+                hidden_layers[len(hidden_layers) - 1]) - 1)
 
         layers = []
         # Generate the hidden layers perceptrons
-        for layer_id in xrange(self.number_of_hidden_layers):
-            layer = self.NeuronLayer(weights, self.units_per_hidden_layer,
+        for layer_id in xrange(len(hidden_layers)):
+            start_index = sum(nodes for nodes in hidden_layers[:layer_id])
+            end_index = start_index + hidden_layers[layer_id]
+            layer = self.NeuronLayer(weights[start_index:end_index],
+                                     hidden_layers[layer_id],
                                      self.learning_factor, self.epochs,
                                      self.activation_function)
             layers.append(layer)
@@ -81,18 +85,7 @@ class NeuralNetwork(object):
         Returns:
             output: output value of the feedforward procedure.
         """
-# TODO: ESTO HACELO BIEN. ARMÁ UNA RED QUE SEA DE TAMAÑO ALEATORIO.
-        units_outputs = []
-        layer_number = 0
-        for layer_i in self.layers:
-            layer_i_outputs = []
-            layer_number += 1
-            for unit in layer_i.layer:
-                layer_i_outputs.append(unit.output(input_sample))
-            units_outputs.append(layer_i_outputs)
-            input_sample = units_outputs[layer_number - 1]
-        print units_outputs
-
+        pass
 
     def train(self, training_sample, expected_output):
         """Computes the components of the weights vector 'w' across all layers.
@@ -133,6 +126,8 @@ class NeuralNetwork(object):
 
             layer = []
             for unit in xrange(self.units_per_layer):
-                layer.append(p.Perceptron(self.weights[unit], self.learning_factor,
-                                          self.epochs, self.activation_function))
+                layer.append(p.Perceptron(self.weights[unit],
+                                          self.learning_factor,
+                                          self.epochs,
+                                          self.activation_function))
             return layer
