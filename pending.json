@@ -1,23 +1,23 @@
 {
 	"1": {
 		"task": "Make the NN layers of arbitrary sizes, i.e. different number of units, not necessarily rectangular.",
-		"created_at": "11/26/2016",
+		"created_at": "2016/11/26",
 		"depends_from": "[]",
 		"priority": "0",
-		"completed": "false"
+		"completed": "2016/12/18"
 	},
 
 	"2": {
 		"task": "Write the feedforward method of the NN.",
-		"created_at": "11/26/2016",
+		"created_at": "2016/11/26",
 		"depends_from": "[1]",
 		"priority": "0",
-		"completed": "false"
+		"completed": "2016/12/20"
 	},
 
 	"3": {
 		"task": "Write the backpropagation method.",
-		"created_at": "11/26/2016",
+		"created_at": "2016/11/26",
 		"depends_from": "[1,2]",
 		"priority": "0",
 		"completed": "false"
@@ -25,9 +25,17 @@
 
 	"4": {
 		"task": "Add a method in utils.py to create new pending tasks in pending.json.",
-		"created_at": "11/26/2016",
+		"created_at": "2016/11/26",
 		"depends_from": "[]",
 		"priority": "5",
 		"completed": "false"
+	},
+
+	"5": {
+		"task": "Check for bug in layers size in creation. e.g. [3,4,5] fails.",
+		"created_at": "2016/12/19",
+		"depends_from": "[]",
+		"priority": "0",
+		"completed": "2016/12/20"
 	}
 }

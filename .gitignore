@@ -6,6 +6,7 @@ __pycache__/
 # Added by me
 *.pyc
 *.DS_Store
+*.swp
 
 # C extensions
 *.so

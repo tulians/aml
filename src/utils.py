@@ -1,7 +1,7 @@
 # aml - Machine learning library.
 # Utilities module.
 # Author: Julian Ailan
-#===================================
+# ===================================
 
 import json
 from pprint import pprint
@@ -9,6 +9,7 @@ from pprint import pprint
 """Provides a series of methods to simplify simple tasks."""
 
 import numpy as np
+
 
 def to_augmented_array(data):
     """Generate the augmented data set, adding a column of '1's
@@ -29,8 +30,9 @@ def to_augmented_array(data):
         # TODO: Define an exception
         return False
     augmented_data_set = np.ones((number_of_samples, dimension + 1))
-    augmented_data_set[:,:-1] = data
+    augmented_data_set[:, :-1] = data
     return augmented_data_set, dimension
+
 
 def pending_tasks():
     # TODO: Print only those that are still left to complete.

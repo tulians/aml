@@ -1,9 +1,10 @@
 # aml - Machine learning library.
 # Testing module.
 # Author: Julian Ailan
-#===================================
+# ===================================
 
 import unittest
+
 
 class PerceptronTest(unittest.TestCase):
 
@@ -14,19 +15,19 @@ class PerceptronTest(unittest.TestCase):
         N = 100
         set1 = ds.generate_multivariate_normal_set(N, [-1.5, -1.5])
         set2 = ds.generate_multivariate_normal_set(N, [1.5, 1.5])
-        dataset = np.concatenate((set1,set2), axis=0)
+        dataset = np.concatenate((set1, set2), axis=0)
         labels = np.concatenate((np.ones(N, dtype=int),
-                                  (-1) * np.ones(N, dtype=int)), axis=0)
+                                 (-1) * np.ones(N, dtype=int)), axis=0)
         per = p.Perceptron()
-        w = per.train(dataset,labels)
+        w = per.train(dataset, labels)
 
         correct_set_1, correct_set_2 = 0, 0
 
         for i in xrange(N):
-            if np.dot(w, np.concatenate((dataset[i],[1]),axis=0)) > 0:
+            if np.dot(w, np.concatenate((dataset[i], [1]), axis=0)) > 0:
                 correct_set_1 += 1
         for i in xrange(N, 2*N):
-            if np.dot(w, np.concatenate((dataset[i],[1]),axis=0)) < 0:
+            if np.dot(w, np.concatenate((dataset[i], [1]), axis=0)) < 0:
                 correct_set_2 += 1
 
         print correct_set_1, correct_set_2
