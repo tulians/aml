@@ -34,6 +34,13 @@ def to_augmented_array(data):
     return augmented_data_set, dimension
 
 
+def sum_of_squared_errors(predicted_output, expected_output):
+    total_sse = 0
+    for pair in zip(predicted_output, expected_output):
+        total_sse += 0.5 * ((pair[1] - pair[0]) ** 2)
+    return total_sse
+
+
 def pending_tasks():
     # TODO: Print only those that are still left to complete.
     with open("../pending.json") as tasks_file:

@@ -61,8 +61,8 @@ class Perceptron(object):
         Returns:
             Returns the output of the activation function.
         """
+
         augmented_sample, _ = np.array(u.to_augmented_array(input_sample))
-        print "Aug: " + str(augmented_sample)
         if alternate_activation_function == "raw":
             return np.dot(self.w, augmented_sample.T)
         elif alternate_activation_function:
