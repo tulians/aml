@@ -75,7 +75,7 @@ class NeuralNetwork(object):
 
         return layers
 
-    def _fix_output_layers_weights(self, expected_output, layer_outputs):
+    def _error_output_layer(self, expected_output, layer_outputs):
         """Makes necessary corrections to output's layer weights
 
         Args:
@@ -83,30 +83,34 @@ class NeuralNetwork(object):
             layer_outputs: feedforward output values from every layer.
 
         Returns:
-            No returns.
+            error_output_layer: corrections to output layer's weights.
         """
-        predicted_output = layer_outputs[len(layer_outputs) - 1]
-        output_layer_inputs = layer_outputs[len(layer_outputs) - 2]
+
+        error_output_layer = []
+
+        predicted_output = layer_outputs[-1]
+        output_layer_inputs = layer_outputs[-2]
         output_layer_inputs.append(1)
 
-        dEtotal_dOut, dOut_dIn, delta = [], [], []
-        for output_index in xrange(self.number_of_outputs):
-            dEtotal_dOut.append(-(expected_output[output_index] -
-                                  predicted_output[output_index]))
-            dOut_dIn.append(predicted_output[output_index] *
-                            (1 - predicted_output[output_index]))
-            delta.append(dEtotal_dOut[output_index] * dOut_dIn[output_index])
+# Reveer todo esto que está mal.
+#        dEtotal_dOut, dOut_dIn, delta = [], [], []
+#        for output_index in xrange(self.number_of_outputs):
+#            dEtotal_dOut.append(-(expected_output[output_index] -
+#                                  predicted_output[output_index]))
+#            dOut_dIn.append(predicted_output[output_index] *
+#                            (1 - predicted_output[output_index]))
+#            delta.append(dEtotal_dOut[output_index] * dOut_dIn[output_index])
+#
+#        output_layer = self.layers[-1].layer
+#        output_layer_inputs = layer_outputs[-2]
+#
+#        for unit_index, output_layer_unit in enumerate(output_layer):
+#            for index in xrange(len(output_layer_unit.w)):
+#                error_output_layer.append(self.learning_factor * delta[unit_index] *
+#                                          output_layer_inputs[index])
+        return error_output_layer
 
-        output_layer = self.layers[-1].layer
-        output_layer_inputs = layer_outputs[-2]
-
-        for unit_index, output_layer_unit in enumerate(output_layer):
-            for index in xrange(len(output_layer_unit.w)):
-                output_layer_unit.w[index] -= (self.learning_factor *
-                                               delta[unit_index] *
-                                               output_layer_inputs[index])
-
-    def _fix_hidden_layers_weights(self, expected_output, layer_outputs,
+    def _error_hidden_layer(self, expected_output, layer_outputs,
                                    training_sample):
         pass
 
@@ -123,10 +127,9 @@ class NeuralNetwork(object):
             No returns.
         """
         # Calculate the compensation for the output layer's weights.
-        self._fix_output_layers_weights(expected_output, layer_outputs)
+        self._error_output_layer(expected_output, layer_outputs)
         # Calculate the compensation for the hidden layers' weights.
-        self._fix_hidden_layers_weights(expected_output, layer_outputs,
-                                        training_sample)
+        self._error_hidden_layer(expected_output, layer_outputs, training_sample)
 
     def _feedforward(self, sample):
         """Computes the output of using 'sample' as network input.

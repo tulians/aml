@@ -1,49 +1,57 @@
 {
-	"1": {
-		"task": "Make the NN layers of arbitrary sizes, i.e. different number of units, not necessarily rectangular.",
-		"created_at": "2016/11/26",
-		"depends_from": "[]",
-		"priority": "0",
-		"completed": "2016/12/18"
-	},
+  "next_task_id": 7,
 
-	"2": {
-		"task": "Write the feedforward method of the NN.",
-		"created_at": "2016/11/26",
-		"depends_from": "[1]",
-		"priority": "0",
-		"completed": "2016/12/20"
-	},
+  "completed": {
+    "1": {
+  		"task": "Make the NN layers of arbitrary sizes, i.e. different number of units, not necessarily rectangular.",
+  		"created_at": "2016/11/26",
+  		"depends_from": "[]",
+  		"priority": "0",
+  		"completed": "2016/12/18"
+  	},
 
-	"3": {
-		"task": "Write the backpropagation method.",
-		"created_at": "2016/11/26",
-		"depends_from": "[1,2]",
-		"priority": "0",
-		"completed": "false"
-	},
+  	"2": {
+  		"task": "Write the feedforward method of the NN.",
+  		"created_at": "2016/11/26",
+  		"depends_from": "[1]",
+  		"priority": "0",
+  		"completed": "2016/12/20"
+  	},
 
-	"4": {
-		"task": "Add a method in utils.py to create new pending tasks in pending.json.",
-		"created_at": "2016/11/26",
-		"depends_from": "[]",
-		"priority": "5",
-		"completed": "false"
-	},
+    "5": {
+  		"task": "Check for bug in layers size in creation. e.g. [3,4,5] fails.",
+  		"created_at": "2016/12/19",
+  		"depends_from": "[]",
+  		"priority": "0",
+  		"completed": "2016/12/20"
+  	}
+  },
 
-	"5": {
-		"task": "Check for bug in layers size in creation. e.g. [3,4,5] fails.",
-		"created_at": "2016/12/19",
-		"depends_from": "[]",
-		"priority": "0",
-		"completed": "2016/12/20"
-	},
+  "working_on": {
+    "3": {
+  		"task": "Write the backpropagation method.",
+  		"created_at": "2016/11/26",
+  		"depends_from": "[1,2]",
+  		"priority": "0",
+  		"completed": "false"
+  	},
+  },
 
-	"6": {
-		"task": "Solve the OverflowError exception of sigmoids.",
-		"created_at": "2016/12/20",
-		"depends_from": "[]",
-		"priority": "1",
-		"completed": "false"
-	}
+  "not_started": {
+    "4": {
+  		"task": "Add a method in utils.py to create new pending tasks in pending.json.",
+  		"created_at": "2016/11/26",
+  		"depends_from": "[]",
+  		"priority": "5",
+  		"completed": "false"
+  	},
+
+    "6": {
+  		"task": "Solve the OverflowError exception of sigmoids.",
+  		"created_at": "2016/12/20",
+  		"depends_from": "[]",
+  		"priority": "1",
+  		"completed": "false"
+  	}
+  }
 }
