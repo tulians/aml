@@ -86,32 +86,26 @@ class NeuralNetwork(object):
             error_output_layer: corrections to output layer's weights.
         """
 
-        error_output_layer = []
+        error_output_layer = np.array([0.0] * self.number_of_outputs)
 
         predicted_output = layer_outputs[-1]
         output_layer_inputs = layer_outputs[-2]
         output_layer_inputs.append(1)
 
-# Reveer todo esto que está mal.
-#        dEtotal_dOut, dOut_dIn, delta = [], [], []
-#        for output_index in xrange(self.number_of_outputs):
-#            dEtotal_dOut.append(-(expected_output[output_index] -
-#                                  predicted_output[output_index]))
-#            dOut_dIn.append(predicted_output[output_index] *
-#                            (1 - predicted_output[output_index]))
-#            delta.append(dEtotal_dOut[output_index] * dOut_dIn[output_index])
-#
-#        output_layer = self.layers[-1].layer
-#        output_layer_inputs = layer_outputs[-2]
-#
-#        for unit_index, output_layer_unit in enumerate(output_layer):
-#            for index in xrange(len(output_layer_unit.w)):
-#                error_output_layer.append(self.learning_factor * delta[unit_index] *
-#                                          output_layer_inputs[index])
+        for i in xrange(self.number_of_outputs):
+            error = expected_output[i] - predicted_output[i]
+            # TODO: Check to use the derivative of the activation_function.
+            error_output_layer[i] = (predicted_output[i] *
+                                     (1 - predicted_output[i]) * error)
+
         return error_output_layer
 
+    # TODO: COMPLETE!
     def _error_hidden_layer(self, expected_output, layer_outputs,
-                                   training_sample):
+                            training_sample):
+        error_hidden_layer = np.array([0.0] * (len(layer_outputs[-2]) + 1))
+
+    def update_weights(self, output_layer_error, hidden_layers_error):
         pass
 
     def _backpropagation(self, expected_output, layer_outputs,
@@ -124,12 +118,16 @@ class NeuralNetwork(object):
             training_sample: inputs to the network.
 
         Returns:
-            No returns.
+            No return values.
         """
         # Calculate the compensation for the output layer's weights.
-        self._error_output_layer(expected_output, layer_outputs)
+        output_layer_error = self._error_output_layer(expected_output,
+                                                      layer_outputs)
         # Calculate the compensation for the hidden layers' weights.
-        self._error_hidden_layer(expected_output, layer_outputs, training_sample)
+        hidden_layers_error = self._error_hidden_layer(expected_output,
+                                                       layer_outputs,
+                                                       training_sample)
+        update_weights(output_layer_error, hidden_layers_error)
 
     def _feedforward(self, sample):
         """Computes the output of using 'sample' as network input.
