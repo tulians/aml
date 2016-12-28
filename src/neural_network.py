@@ -89,8 +89,6 @@ class NeuralNetwork(object):
         output_layer_inputs = layers_output[-2]
         output_layer_inputs.append(1)
 
-        weights_per_output_unit = 1 + len(output_layer_inputs)
-        number_of_weights = weights_per_output_unit * self.number_of_outputs
         error_output_layer = np.array([0.0] * self.number_of_outputs)
 
         for i in xrange(self.number_of_outputs):
@@ -99,18 +97,21 @@ class NeuralNetwork(object):
             error_output_layer[i] = (predicted_output[i] *
                                      (1 - predicted_output[i]) * error)
 
-        number_of_weights = (1 + len(output_layer_inputs)) * self.number_of_outputs
+        number_of_weights = len(output_layer_inputs) * self.number_of_outputs
+        print len(output_layer_inputs), self.number_of_outputs, number_of_weights
         output_layer_weights_fixes = np.array([0.0] * number_of_weights)
-        for output_layer_unit_weight_index in xrange(number_of_weights):
-            curr_output = output_layer_unit_weight_index / weights_per_output_unit
-            output_layer_weights_fixes[curr_output] = (error_output_layer[curr_output] *
-                                                       output_layer_inputs[curr_output])
+        for weight_index in xrange(number_of_weights):
+            curr_output = weight_index / len(output_layer_inputs)
+            curr_input = weight_index / self.number_of_outputs
+            print curr_output, curr_input
+            output_layer_weights_fixes[weight_index] = (error_output_layer[curr_output] *
+                                                        output_layer_inputs[curr_input])
 
         return output_layer_weights_fixes
 
 
     # TODO: COMPLETE!
-    def _error_hidden_layer(self, expected_output, layers_output, training_sample):
+    def _error_hidden_layers(self, expected_output, layers_output, training_sample):
         pass
 
     def _update_weights(self, output_layer_error, hidden_layers_error):
@@ -130,7 +131,7 @@ class NeuralNetwork(object):
         # Calculate the compensation for the output layer's weights.
         output_layer_error = self._error_output_layer(expected_output, layers_output)
         # Calculate the compensation for the hidden layers' weights.
-        hidden_layers_error = self._error_hidden_layer(expected_output, layers_output,
+        hidden_layers_error = self._error_hidden_layers(expected_output, layers_output,
                                                        training_sample)
         self._update_weights(output_layer_error, hidden_layers_error)
 
