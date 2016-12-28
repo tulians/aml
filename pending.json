@@ -1,5 +1,5 @@
 {
-  "next_task_id": 7,
+  "next_task_id": 8,
 
   "completed": {
     "1": {
@@ -52,6 +52,14 @@
   		"depends_from": "[]",
   		"priority": "1",
   		"completed": "false"
-  	}
+  	},
+
+    "7": {
+      "task": "Check if there are TODOs.",
+  		"created_at": "2016/12/27",
+  		"depends_from": "[]",
+  		"priority": "5",
+  		"completed": "false"
+    }
   }
 }

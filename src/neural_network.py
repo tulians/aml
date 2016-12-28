@@ -14,9 +14,8 @@ import perceptron as p
 class NeuralNetwork(object):
     """Layer against layer neural network architecture."""
 
-    def __init__(self, number_of_inputs=2, number_of_outputs=1,
-                 hidden_layers=[2], learning_factor=1, epochs=50,
-                 activation_function="sigmod"):
+    def __init__(self, number_of_inputs=2, number_of_outputs=1, hidden_layers=[2],
+                 learning_factor=1, epochs=50, activation_function="sigmod"):
 
         # TODO: ADD EXCEPTIONS IN CASE ANY PARAMETER IS WRONG.
         self.number_of_inputs = number_of_inputs
@@ -75,22 +74,24 @@ class NeuralNetwork(object):
 
         return layers
 
-    def _error_output_layer(self, expected_output, layer_outputs):
+    def _error_output_layer(self, expected_output, layers_output):
         """Makes necessary corrections to output's layer weights
 
         Args:
             expected_output: class label value to match.
-            layer_outputs: feedforward output values from every layer.
+            layers_output: feedforward output values from every layer.
 
         Returns:
-            error_output_layer: corrections to output layer's weights.
+            output_layer_weights_fixes: corrections to output layer's weights.
         """
 
-        error_output_layer = np.array([0.0] * self.number_of_outputs)
-
-        predicted_output = layer_outputs[-1]
-        output_layer_inputs = layer_outputs[-2]
+        predicted_output = layers_output[-1]
+        output_layer_inputs = layers_output[-2]
         output_layer_inputs.append(1)
+
+        weights_per_output_unit = 1 + len(output_layer_inputs)
+        number_of_weights = weights_per_output_unit * self.number_of_outputs
+        error_output_layer = np.array([0.0] * self.number_of_outputs)
 
         for i in xrange(self.number_of_outputs):
             error = expected_output[i] - predicted_output[i]
@@ -98,56 +99,55 @@ class NeuralNetwork(object):
             error_output_layer[i] = (predicted_output[i] *
                                      (1 - predicted_output[i]) * error)
 
-        return error_output_layer
+        number_of_weights = (1 + len(output_layer_inputs)) * self.number_of_outputs
+        output_layer_weights_fixes = np.array([0.0] * number_of_weights)
+        for output_layer_unit_weight_index in xrange(number_of_weights):
+            curr_output = output_layer_unit_weight_index / weights_per_output_unit
+            output_layer_weights_fixes[curr_output] = (error_output_layer[curr_output] *
+                                                       output_layer_inputs[curr_output])
+
+        return output_layer_weights_fixes
+
 
     # TODO: COMPLETE!
-    def _error_hidden_layer(self, expected_output, layer_outputs,
-                            training_sample):
-        error_hidden_layer = np.array([0.0] * (len(layer_outputs[-2]) + 1))
-
-    def update_weights(self, output_layer_error, hidden_layers_error):
+    def _error_hidden_layer(self, expected_output, layers_output, training_sample):
         pass
 
-    def _backpropagation(self, expected_output, layer_outputs,
-                         training_sample):
+    def _update_weights(self, output_layer_error, hidden_layers_error):
+        pass
+
+    def _backpropagation(self, expected_output, layers_output, training_sample):
         """Adjusts network's weights by using backpropagation of errors.
 
         Args:
             expected_output: class label value to match.
-            layer_outputs: feedforward output values from every layer.
+            layers_output: feedforward output values from every layer.
             training_sample: inputs to the network.
 
         Returns:
             No return values.
         """
         # Calculate the compensation for the output layer's weights.
-        output_layer_error = self._error_output_layer(expected_output,
-                                                      layer_outputs)
+        output_layer_error = self._error_output_layer(expected_output, layers_output)
         # Calculate the compensation for the hidden layers' weights.
-        hidden_layers_error = self._error_hidden_layer(expected_output,
-                                                       layer_outputs,
+        hidden_layers_error = self._error_hidden_layer(expected_output, layers_output,
                                                        training_sample)
-        update_weights(output_layer_error, hidden_layers_error)
+        self._update_weights(output_layer_error, hidden_layers_error)
 
     def _feedforward(self, sample):
-        """Computes the output of using 'sample' as network input.
+        """Computes the output of using 'sample' as network's input.
 
         Args:
             sample: training sample provided.
 
         Returns:
-            output: output value of the feedforward procedure.
-            layer_outputs: intermidiate values from every layer.
+            outputs: output value of the feedforward procedure.
         """
-
-        layer_outputs = []
+        outputs = []
         for hidden_layer in self.layers:
-            outputs = []
-            for hidden_layer_unit in hidden_layer.layer:
-                outputs.append(hidden_layer_unit.output(sample))
-            layer_outputs.append(outputs)
-            sample = outputs
-        return outputs, layer_outputs
+            outputs.append([layer.output(sample) for layer in hidden_layer.layer])
+            sample = outputs[-1]
+        return outputs
 
     def train(self, training_sample, expected_output):
         """Computes the components of the weights vector 'w' across all layers.
@@ -161,12 +161,10 @@ class NeuralNetwork(object):
         """
 
         # TODO: Add TypeError management.
-        predicted_output, layer_outputs = self._feedforward(training_sample)
-        sse = u.sum_of_squared_errors(predicted_output,
-                                      expected_output)
-        self._backpropagation(expected_output, layer_outputs, training_sample)
-        print(str(predicted_output) + " " + str(expected_output) + " " +
-              str(self._feedforward([1, 1])[0]))
+        layers_output = self._feedforward(training_sample)
+        sse = u.sum_of_squared_errors(layers_output[-1], expected_output)
+        self._backpropagation(expected_output, layers_output, training_sample)
+        print(str(layers_output[-1]) + " " + str(expected_output))
 
     def run(self, input_sample, expected_output, epochs=1000000):
         for _ in xrange(epochs):
@@ -175,8 +173,8 @@ class NeuralNetwork(object):
     class _NeuronLayer(object):
         """Inner class that generates a layer of perceptrons."""
 
-        def __init__(self, weights, units_per_layer, learning_factor,
-                     epochs, activation_function):
+        def __init__(self, weights, units_per_layer, learning_factor, epochs,
+                     activation_function):
 
             self.weights = weights
             self.units_per_layer = units_per_layer
