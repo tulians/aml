@@ -8,6 +8,8 @@
 import numpy as np
 import math as m
 
+# Lambdas
+
 
 def UnitStep(center=0):
     # return lambda x: 0 if x < center else (0.5 if x == center else 1)
@@ -27,3 +29,20 @@ def TanH(center=0, width=1, derivative_needed=False):
         return lambda x: 1.0 - pow((x - center) / width, 2)
     else:
         return lambda x: np.tanh((x - center) / width)
+
+# Non-lambdas
+
+
+def sigmoid(z):
+    """The sigmoid function."""
+    return 1.0 / (1.0 + np.exp(-z))
+
+
+def sigmoid_prime(z):
+    """Derivative of the sigmoid function."""
+    return sigmoid(z) * (1 - sigmoid(z))
+
+activation_functions = {
+    "sigmoid": sigmoid,
+    "sigmoidp": sigmoid_prime
+}
