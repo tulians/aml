@@ -4,6 +4,7 @@
 # ===================================
 
 import json
+import numpy as np
 from pprint import pprint
 
 """Provides a series of methods to simplify simple tasks."""
@@ -32,13 +33,6 @@ def to_augmented_array(data):
     augmented_data_set = np.ones((number_of_samples, dimension + 1))
     augmented_data_set[:, :-1] = data
     return augmented_data_set, dimension
-
-
-def sum_of_squared_errors(predicted_output, expected_output):
-    total_sse = 0
-    for pair in zip(predicted_output, expected_output):
-        total_sse += 0.5 * ((pair[1] - pair[0]) ** 2)
-    return total_sse
 
 
 def pending_tasks():

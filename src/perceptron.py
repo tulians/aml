@@ -14,15 +14,12 @@ class Perceptron(object):
     """Classic perceptron implementation."""
 
     def __init__(self, input_weights=None, learning_factor=1, epochs=50,
-                 activation_function="sigmod"):
+                 activation_function="logistic"):
 
         self.w = input_weights
         self.learning_factor = learning_factor
         self.epochs = epochs
-        if activation_function == "unitstep":
-            self.activation_function = th.UnitStep()
-        else:
-            self.activation_function = th.Sigmoid()
+        self.activation_function = th.lambdas[activation_function]
 
     def train(self, data_set, labels, alternate_number_of_epochs=None):
         """Computes the components of the weights vector 'w'.

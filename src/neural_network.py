@@ -5,86 +5,113 @@
 
 """Provides an abstraction to generate neural networks."""
 
-import random
-
-import numpy as np
-
+# Project's modules
+import utils as u
 import threshold as th
+# Third-party modules
+import numpy as np
 
 
 class NeuralNetwork(object):
     """Layer against layer neural network architecture."""
 
-    def __init__(self, layers=[2, 2, 1], learning_factor=1, epochs=50,
-                 activation_function="sigmoid"):
-
-        self.epochs = epochs
-        self.layers = layers
-        self.number_of_layers = len(layers)
-        self.biases = [2 * np.random.rand(layer, 1) - 1 for layer in
-                       layers[1:]]
-        self.weights = [2 * np.random.rand(layer, units) - 1 for units, layer
-                        in zip(layers[:-1], layers[1:])]
-        self.activation_function = th.activation_functions[activation_function]
-
-    def _feedforward(self, sample):
-        """Generate the outputs of each layer from a sample
+    def __init__(self, layers=[2, 2, 1], activation_function="logistic"):
+        """Neural network class constructor.
 
         Args:
-            sample: data to feed the network with.
+            layers: list which includes the number of units in each layer. The
+            first item on the list corresponds to the number of units in the
+            input layer. The last element corresponds to the number of units
+            in the output layer. Thus, the numbers in between correspond to
+            the units in the hidden layers.
 
-        Returns:
-            outputs: output values of each unit in each layer.
-            activations: otuput values through the activation function.
-        """
-        outputs, activations = [], []
-        for weight, bias in zip(self.weights, self.biases):
-            dot_product = np.dot(weight, sample) + bias
-            outputs.append(dot_product)
-            activations.append(self.activation_function(dot_product))
-        return outputs, activations
-
-    def train(self, training_samples, batch_size):
-        """Train the network using stochastic gradient descent (SGD).
-
-        Args:
-            training_samples: set of samples to train the network with.
-            batch_size: length of each batch for the SGD algorithm.
+            activation_function: sigmoid function to use as unit activation.
 
         Returns:
             No data is returned.
         """
-        number_of_samples = len(training_samples)
-        for index in xrange(self.epochs):
-            random.shuffle(training_samples)
-            # Generate the batch of samples in the current iteration.
-            batches = [
-                training_samples[k:(k + batch_size)]
-                for k in xrange(0, number_of_samples, batch_size)
-            ]
-            print batches
-            for batch in batches:
-                self._backpropagate_and_update_batch(batch)
+        self.layers = layers
+        self.activation_function = th.activation_functions[activation_function]
+        self.activation_derivative = th.activation_derivatives[
+            activation_function]
+        self.weights = self._generate_weights(layers)
 
-    def _backpropagate_and_update_batch(self, batch):
+    def _generate_weights(self, layers):
+        """Generates the network's synaptic weights. Bias weights are
+        respectively added to the output list.
 
-        nabla_bias = [np.zeros(b.shape) for b in self.biases]
-        nabla_weights = [np.zeros(w.shape) for w in self.weights]
-        for value, target in batch:
-            delta_nabla_bias, delta_nabla_weights = self._backpropagate(value,
-                                                                        target)
-            nabla_bias = [nb + dnb for nb, dnb in zip(nabla_bias,
-                                                      delta_nabla_bias)]
-            nabla_weights = [nw + dnw for nw, dnw in zip(nabla_weights,
-                                                         delta_nabla_weights)]
-        self.biases = [b - (self.learning_factor / len(batch)) * nb
-                       for b, nb in zip(self.biases, nabla_bias)]
-        self.weights = [w - (self.learning_factor / len(batch)) * nw
-                        for w, nw in zip(self.weights, nabla_weights)]
+        Args:
+            layers: list which includes the number of units in each layer.
 
-    def _backpropagate(self, value, target):
-        nabla_bias = [np.zeros(b.shape) for b in self.biases]
-        nabla_weights = [np.zeros(w.shape) for w in self.weights]
+        Returns:
+            weights: list of synaptic weights.
+        """
+        weights = []
+        for i in range(1, len(layers) - 1):
+            weights.append(
+                2 * np.random.random((layers[i - 1] + 1, layers[i] + 1)) - 1)
+        weights.append(
+            2 * np.random.random((layers[i] + 1, layers[i + 1])) - 1)
+        return weights
 
-        activations, layers_outputs = [value], []
-        layers_outputs, activations = self._feedforward(activations)
+    def feedforward(self, sample):
+        """Computes the output of the network given a sample vector.
+
+        Args:
+            sample: input to the network.
+
+        Returns:
+            output: vector with output layer values.
+        """
+        output, _ = u.to_augmented_array(sample)
+        for weight in xrange(len(self.weights)):
+            output = self.activation_function(
+                np.dot(output, self.weights[weight]))
+        return output
+
+    def train(self, training_samples, labels, learning_rate=0.1,
+              epochs=10000):
+        """Trains the network using stochastic gradient descent (SGD).
+
+        Args:
+            training_samples: list of samples used to train the network's
+            weights.
+
+            labels: outputs associated to the training_samples.
+
+            learning_rate: 'speed' at which the SGD algorithm learns.
+
+            epochs: number of iterations to perform in SGD.
+
+        Returns:
+            No data is returned.
+        """
+        # Format vector inputs.
+        training_samples, _ = u.to_augmented_array(training_samples)
+        labels = np.array(labels)
+
+        for epoch in xrange(epochs):
+            sample_index = np.random.randint(training_samples.shape[0])
+            activations = [training_samples[sample_index]]
+            # Forward pass.
+            for weight in xrange(len(self.weights)):
+                activations.append(
+                    self.activation_function(
+                        np.dot(activations[weight], self.weights[weight])
+                    ))
+            # Backpropagation starts:
+            # 1- Output layer weights compensation.
+            dEtotal_wrt_dOutput = labels[sample_index] - activations[-1]
+            dOutput_wrt_dInput = self.activation_derivative(activations[-1])
+            deltas = [dEtotal_wrt_dOutput * dOutput_wrt_dInput]
+            # 2- Hidden layers weights compensation.
+            for layer in xrange(len(activations) - 2, 0, -1):
+                deltas.append(
+                    deltas[-1].dot(self.weights[layer].T) *
+                    self.activation_derivative(activations[layer]))
+            deltas.reverse()
+            # 3- Weights update.
+            for index in xrange(len(self.weights)):
+                layer = np.atleast_2d(activations[index])
+                delta = np.atleast_2d(deltas[index])
+                self.weights[index] += learning_rate * np.dot(layer.T, delta)
