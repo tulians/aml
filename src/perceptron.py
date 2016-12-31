@@ -5,9 +5,11 @@
 
 """Provides different implementations of perceptrons."""
 
-import numpy as np
+# Project's modules
 import threshold as th
 import utils as u
+# Third-party modules
+import numpy as np
 
 
 class Perceptron(object):

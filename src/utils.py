@@ -3,9 +3,11 @@
 # Author: Julian Ailan
 # ===================================
 
+# Built-in modules.
 import json
-import numpy as np
 from pprint import pprint
+# Third-party modules.
+import numpy as np
 
 """Provides a series of methods to simplify simple tasks."""
 

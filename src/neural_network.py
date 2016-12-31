@@ -93,8 +93,7 @@ class NeuralNetwork(object):
             for weight in xrange(len(self.weights)):
                 activations.append(
                     self.activation_function(
-                        np.dot(activations[weight], self.weights[weight])
-                    ))
+                        np.dot(activations[weight], self.weights[weight])))
             # Backpropagation starts:
             # 1- Output layer weights compensation.
             dEtotal_wrt_dOutput = labels[sample_index] - activations[-1]

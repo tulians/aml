@@ -5,6 +5,7 @@
 
 """Provides a set of threshold methods."""
 
+# Third-party modules
 import numpy as np
 
 

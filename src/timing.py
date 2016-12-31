@@ -5,6 +5,7 @@
 
 """Provides a set of custom timing methods."""
 
+# Built-in modules.
 import time
 
 
