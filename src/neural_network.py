@@ -24,7 +24,6 @@ class NeuralNetwork(object):
             input layer. The last element corresponds to the number of units
             in the output layer. Thus, the numbers in between correspond to
             the units in the hidden layers.
-
             activation_function: sigmoid function to use as unit activation.
 
         Returns:
@@ -76,11 +75,8 @@ class NeuralNetwork(object):
         Args:
             training_samples: list of samples used to train the network's
             weights.
-
             labels: outputs associated to the training_samples.
-
             learning_rate: 'speed' at which the SGD algorithm learns.
-
             epochs: number of iterations to perform in SGD.
 
         Returns:

@@ -1,5 +1,5 @@
 {
-  "next_task_id": 8,
+  "next_task_id": 9,
 
   "completed": {
     "1": {
@@ -24,17 +24,27 @@
   		"depends_from": "[]",
   		"priority": "0",
   		"completed": "2016/12/20"
-  	}
-  },
+  	},
 
-  "working_on": {
     "3": {
   		"task": "Write the backpropagation method.",
   		"created_at": "2016/11/26",
   		"depends_from": "[1,2]",
   		"priority": "0",
-  		"completed": "false"
+  		"completed": "2016/12/31"
   	},
+
+    "8": {
+      "task": "Remove lambdas and correct perceptron implementation.",
+  		"created_at": "2016/12/31",
+  		"depends_from": "[]",
+  		"priority": "2",
+  		"completed": "2016/12/31"
+    }
+  },
+
+  "working_on": {
+
   },
 
   "not_started": {
@@ -47,11 +57,12 @@
   	},
 
     "6": {
-  		"task": "Solve the OverflowError exception of sigmoids.",
+  		"task": "Check runtime overflows from Numpy in exp.",
   		"created_at": "2016/12/20",
   		"depends_from": "[]",
-  		"priority": "1",
-  		"completed": "false"
+  		"priority": "0",
+  		"completed": "false",
+      "modified": "2016/12/31"
   	},
 
     "7": {

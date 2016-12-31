@@ -6,30 +6,9 @@
 """Provides a set of threshold methods."""
 
 import numpy as np
-import math as m
-
-# Lambdas
-def UnitStep(center=0):
-    # return lambda x: 0 if x < center else (0.5 if x == center else 1)
-    return lambda x: 0 if x < center else 1
 
 
-def Logistic(center=0, width=1, derivative_needed=False):
-    if derivative_needed:
-        return (lambda x: m.exp((-x + center) / width) /
-                pow((1 + m.exp((-x + center) / width)), 2))
-    else:
-        return lambda x: 1 / (1 + m.exp((-x + center) / width))
-
-
-def TanH(center=0, width=1, derivative_needed=False):
-    if derivative_needed:
-        return lambda x: 1.0 - pow((x - center) / width, 2)
-    else:
-        return lambda x: np.tanh((x - center) / width)
-
-# Non-lambdas
-def logistic(data):
+def logistic(data, center=0, width=1):
     """Performs the computation of an activation using the logistic function as
     sigmoid.
 
@@ -39,10 +18,10 @@ def logistic(data):
     Returns:
         The result of the operation.
     """
-    return 1.0 / (1.0 + np.exp(-data))
+    return 1.0 / (1.0 + np.exp((-data + center) / width))
 
 
-def logistic_prime(data):
+def logistic_prime(data, center=0, width=1):
     """Performs the derivative of the logistic function, using its property.
 
     Args:
@@ -51,10 +30,10 @@ def logistic_prime(data):
     Returns:
         The result of the operation.
     """
-    return logistic(data) * (1 - logistic(data))
+    return logistic(data, center, width) * (1 - logistic(data, center, width))
 
 
-def tanh(x):
+def tan_h(data, center=0, width=1):
     """Performs the computation of an activation using the hyperbolic tangent
     function as sigmoid.
 
@@ -64,10 +43,10 @@ def tanh(x):
     Returns:
         The result of the operation.
     """
-    return np.tanh(x)
+    return np.tanh((data - center) / width)
 
 
-def tanh_prime(x):
+def tanh_prime(data, center=0, width=1):
     """Performs the derivative of the hyperbolic tangent function.
 
     Args:
@@ -77,21 +56,27 @@ def tanh_prime(x):
     Returns:
         The result of the operation.
     """
-    return 1.0 - np.tanh(x) ** 2
+    return 1.0 - tan_h(data, center, width) ** 2
 
+
+def unit_step(data, center=0):
+    """Simple unit-step function.
+
+    Args:
+        data: value along the step.
+
+    Returns:
+        The result of the operation.
+    """
+    return 0 if data < center else 1
 
 activation_functions = {
     "logistic": logistic,
-    "tanh": tanh,
+    "tanh": tan_h,
+    "unitstep": unit_step
 }
 
 activation_derivatives = {
     "logistic": logistic_prime,
-    "tanh": tanh_prime,
-}
-
-lambdas = {
-    "logistic": Logistic,
-    "unitstep": UnitStep,
-    "tanh": TanH
+    "tanh": tanh_prime
 }
