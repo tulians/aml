@@ -2,7 +2,7 @@
 *aml* (accelerated machine learning) is a general purpose machine learning library aimed a code legibility, great execution speed and minimal dependencies. The only package needed is **NumPy**, which was chosen for its powerful linear algebra and N-dimensional array properties. It is currently under development, so any errors or non-optimal implementations will be fixed in further commits.
 
 ### Examples
-##### Fully connected neural network
+#### Fully connected neural network
 *aml* provides a simple fully connected neural network which uses the classical backpropagation algorithm for learning. The paradigmatic XOR problem can be solved using these lines of code:
 
 ```python
@@ -13,6 +13,7 @@
 ... ]
 >>> labels = [0, 1, 1, 0]
 >>> net.train(training_samples, labels)
+>>> # Test the network.
 >>> for sample in training_samples:
 ...    print(sample, net.feedforward(sample))
 ...
@@ -22,7 +23,7 @@
 ([1, 1], array([[ 1.81847912e-05]]))
 ```
 
-##### Perceptron
+#### Perceptron
 Imagine you need to learn a function like AND, OR, NOT, or any linearly separable boolean function, *aml* provides a **Perceptron** that is able to generate a separation surface among both classes. Taking the AND function as an example, the weights of the separation surface can be coded computed with these few lines:
 
 ```python
@@ -31,7 +32,7 @@ Imagine you need to learn a function like AND, OR, NOT, or any linearly separabl
 >>> data = [[0,0],[0,1],[1,0],[1,1]]
 >>> labels = [0,0,0,1]
 >>> per.train(data, labels)
->>> # Test the classifier
+>>> # Test the classifier.
 >>> per.output([0,0])
 0
 >>> per.output([0,1])
@@ -50,7 +51,6 @@ $ pip install numpy
 
 ### Todos
   - Create methods to manage pending tasks.
-  - Automatically check for *TODOs*.
 
 ### Version
 0.2
