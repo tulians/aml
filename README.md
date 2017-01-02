@@ -49,7 +49,6 @@ $ pip install numpy
 ```
 
 ### Todos
-  - Check runtime overflows from NumPy in sigmoids *exp*.
   - Create methods to manage pending tasks.
   - Automatically check for *TODOs*.
 

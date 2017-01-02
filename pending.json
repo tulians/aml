@@ -47,9 +47,17 @@
   		"created_at": "2016/12/20",
   		"depends_from": "[]",
   		"priority": "0",
-  		"completed": "2017/1/02",
+  		"completed": "2017/01/02",
       "modified": "2016/12/31"
-  	}
+  	},
+
+    "7": {
+      "task": "Check if there are TODOs.",
+  		"created_at": "2016/12/27",
+  		"depends_from": "[]",
+  		"priority": "5",
+  		"completed": "2017/01/02"
+    }
   },
 
   "working_on": {
@@ -63,14 +71,6 @@
   		"depends_from": "[]",
   		"priority": "5",
   		"completed": "false"
-  	},
-
-    "7": {
-      "task": "Check if there are TODOs.",
-  		"created_at": "2016/12/27",
-  		"depends_from": "[]",
-  		"priority": "5",
-  		"completed": "false"
-    }
+  	}
   }
 }
