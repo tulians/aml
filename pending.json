@@ -44,7 +44,14 @@
   },
 
   "working_on": {
-
+    "6": {
+  		"task": "Check runtime overflows from Numpy in exp.",
+  		"created_at": "2016/12/20",
+  		"depends_from": "[]",
+  		"priority": "0",
+  		"completed": "false",
+      "modified": "2016/12/31"
+  	}
   },
 
   "not_started": {
@@ -54,15 +61,6 @@
   		"depends_from": "[]",
   		"priority": "5",
   		"completed": "false"
-  	},
-
-    "6": {
-  		"task": "Check runtime overflows from Numpy in exp.",
-  		"created_at": "2016/12/20",
-  		"depends_from": "[]",
-  		"priority": "0",
-  		"completed": "false",
-      "modified": "2016/12/31"
   	},
 
     "7": {
