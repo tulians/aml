@@ -6,7 +6,6 @@
 *aml* provides a simple fully connected neural network which uses the classical backpropagation algorithm for learning. The paradigmatic XOR problem can be solved using these lines of code:
 
 ```python
->>> import numpy as np
 >>> import neural_network as nn
 >>> net = nn.NeuralNetwork([2, 2, 1], activation_function="tanh")
 >>> training_samples = [
