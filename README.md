@@ -7,7 +7,7 @@
 
 ```python
 >>> import neural_network as nn
->>> net = nn.NeuralNetwork([2, 2, 1], activation_function="tanh")
+>>> net = nn.NeuralNetwork(layers=[2, 2, 1], activation_function="tanh")
 >>> training_samples = [
 ...    [0, 0], [0, 1], [1, 0], [1, 1]
 ... ]
