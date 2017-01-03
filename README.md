@@ -50,7 +50,7 @@ $ pip install numpy
 ```
 
 ### Todos
-  - Create methods to manage pending tasks.
+
 
 ### Version
 0.2

@@ -3,14 +3,9 @@
 # Author: Julian Ailan
 # ===================================
 
-# Built-in modules.
-import json
-from pprint import pprint
+"""Provides a series of methods to simplify operations."""
+
 # Third-party modules.
-import numpy as np
-
-"""Provides a series of methods to simplify simple tasks."""
-
 import numpy as np
 
 
@@ -35,10 +30,3 @@ def to_augmented_array(data):
     augmented_data_set = np.ones((number_of_samples, dimension + 1))
     augmented_data_set[:, :-1] = data
     return augmented_data_set, dimension
-
-
-def pending_tasks():
-    # TODO: Print only those that are still left to complete.
-    with open("../pending.json") as tasks_file:
-        data = json.load(tasks_file)
-    pprint(data)
