@@ -11,9 +11,7 @@ import numpy as np
 
 def logistic(data, center=0, width=1):
     """Performs the computation of an activation using the logistic function as
-    sigmoid. The values 36 and -709 are used as thresholds, in order to avoid
-    overflows from numpy's exp function. Values greater than 36 will output
-    always 1; values smaller than -709 will always output 0.
+    sigmoid.
 
     Args:
         data: value to replace in the logistic function expression.
@@ -21,12 +19,7 @@ def logistic(data, center=0, width=1):
     Returns:
         The result of the operation.
     """
-    if data > 36:
-        return 1
-    elif data < -709:
-        return 0
-    else:
-        return 1.0 / (1.0 + np.exp((-data + center) / width))
+    return 1.0 / (1.0 + np.exp((-data - center) / width))
 
 
 def logistic_prime(data, center=0, width=1):
@@ -43,8 +36,7 @@ def logistic_prime(data, center=0, width=1):
 
 def tan_h(data, center=0, width=1):
     """Performs the computation of an activation using the hyperbolic tangent
-    function as sigmoid. 'data' is turned to a 64-bit floating point number in
-    order to avoid data type issues with NumPy.
+    function as sigmoid.
 
     Args:
         data: value to replace in the hyperbolic tangent function expression.
@@ -52,7 +44,7 @@ def tan_h(data, center=0, width=1):
     Returns:
         The result of the operation.
     """
-    return np.tanh((np.float64(data) - center) / width)
+    return np.tanh((data - center) / width)
 
 
 def tanh_prime(data, center=0, width=1):
@@ -79,13 +71,46 @@ def unit_step(data, center=0):
     """
     return 0 if data < center else 1
 
+
+def relu(data, epsilon=0.1):
+    """Leaky ReLU implementation
+
+    Args:
+        data: value to replace in the max(epsilon, data) function.
+        epsilon: step to generate some error to backpropagate and avoid neuron
+        dying.
+
+    Returns:
+        The result of the Leaky ReLU operation.
+    """
+    return np.maximum(epsilon * data, data)
+
+
+def relu_prime(data, epsilon=0.1):
+    """Performs the derivative of the Leaky ReLU operation.
+
+    Args:
+        data: value to replace in the max(epsilon, data) function.
+        epsilon: step to generate some error to backpropagate and avoid neuron
+        dying.
+
+    Returns:
+        The result of the Leaky ReLU derivative operation.
+    """
+    if 1. * np.all(epsilon < data):
+        return 1
+    return epsilon
+
+
 activation_functions = {
     "logistic": logistic,
     "tanh": tan_h,
-    "unitstep": unit_step
+    "unitstep": unit_step,
+    "relu": relu
 }
 
 activation_derivatives = {
     "logistic": logistic_prime,
-    "tanh": tanh_prime
+    "tanh": tanh_prime,
+    "relu": relu_prime
 }
