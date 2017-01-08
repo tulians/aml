@@ -49,6 +49,7 @@ class PendingTasks(object):
         self.next_task_id += 1
         self.not_started[str(task_id)] = new_task
         self.unsaved_changes = True
+        print("New task with id #{} added.".format(task_id))
 
     def modify_task(self, task_id, **field_to_update_and_value):
         """Modifies fields in not started tasks.
@@ -93,6 +94,8 @@ class PendingTasks(object):
             self.working_on[task_id] = task_to_start
             del self.not_started[task_id]
             self.unsaved_changes = True
+            print("Task #{0}: '{1}', started.".format(task_id,
+                                                      task_to_start["task"]))
         except KeyError:
             print("There is no pending task with such id. Please check the" +
                   " id number of the task to mark as started again.")
@@ -114,6 +117,9 @@ class PendingTasks(object):
             self.completed_tasks[task_id] = completed_task
             del self.working_on[task_id]
             self.unsaved_changes = True
+            print("Task #{0}: '{1}', completed.".format(task_id,
+                                                        completed_task["task"])
+                  )
         except KeyError:
             print("There is no current task with such id. Please check the" +
                   " id number of the task to mark as complete again.")
@@ -127,12 +133,14 @@ class PendingTasks(object):
                 "working_on": self.working_on,
                 "not_started": self.not_started
             }
-            pending_tasks_file = open(self.dir_path, 'w')
-            pending_tasks_file.write(
-                json.dumps(file_with_changes,
-                           sort_keys=True,
-                           indent=4,
-                           separators=(",", ": "))
-            )
+            with open(self.dir_path, 'w') as pending_tasks_file:
+                pending_tasks_file.write(
+                    json.dumps(file_with_changes,
+                               sort_keys=True,
+                               indent=4,
+                               separators=(",", ": "))
+                )
+            self.unsaved_changes = False
+            print("Changes applied to pending tasks file.")
         else:
-            print "No changes have been made to the pending tasks file."
+            print("No changes have been made to the pending tasks file.")
