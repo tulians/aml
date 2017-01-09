@@ -73,7 +73,7 @@ def unit_step(data, center=0):
 
 
 def relu(data, epsilon=0.1):
-    """Leaky ReLU implementation
+    """Leaky ReLU function.
 
     Args:
         data: value to replace in the max(epsilon, data) function.
@@ -97,7 +97,7 @@ def relu_prime(data, epsilon=0.1):
     Returns:
         gradients: The result of the Leaky ReLU derivative operation.
     """
-    gradients = 1. * (data > epsilon)
+    gradients = 1. * (data > 0)
     gradients[gradients == 0] = epsilon
     return gradients
 
