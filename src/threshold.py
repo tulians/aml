@@ -95,11 +95,11 @@ def relu_prime(data, epsilon=0.1):
         dying.
 
     Returns:
-        The result of the Leaky ReLU derivative operation.
+        gradients: The result of the Leaky ReLU derivative operation.
     """
-    if 1. * np.all(epsilon < data):
-        return 1
-    return epsilon
+    gradients = 1. * (data > epsilon)
+    gradients[gradients == 0] = epsilon
+    return gradients
 
 
 activation_functions = {
