@@ -5,7 +5,7 @@ description=$1
 git add .
 git status
 
-echo $description
+echo "Commit description: '$description'"
 
 echo "Is the commit description correct? [y/n]:"
 read prompt

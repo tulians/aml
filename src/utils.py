@@ -19,14 +19,15 @@ def to_augmented_array(data):
         Returns the input vector in its augmented form.
     """
     data = np.array(data)
-    if data.ndim is 1:
-        number_of_samples = 1
-        dimension = data.size
-    elif data.ndim is 2:
-        number_of_samples, dimension = data.shape
+    if data.size > 0:
+        if data.ndim is 1:
+            number_of_samples = 1
+            dimension = data.size
+        elif data.ndim is 2:
+            number_of_samples, dimension = data.shape
+        augmented_data_set = np.ones((number_of_samples, dimension + 1))
+        augmented_data_set[:, :-1] = data
+        return augmented_data_set, dimension
     else:
-        # TODO: Define an exception
-        return False
-    augmented_data_set = np.ones((number_of_samples, dimension + 1))
-    augmented_data_set[:, :-1] = data
-    return augmented_data_set, dimension
+        print("ERROR: An empty input vector was received. No bias unit should"
+              " be added.")
