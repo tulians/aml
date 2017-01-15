@@ -19,7 +19,8 @@ def logistic(data):
     Returns:
         The result of the operation.
     """
-    return 1.0 / (1.0 + np.exp(-data))
+    output = 1.0 / (1.0 + np.exp(-data))
+    return (2 * output) - 1
 
 
 def logistic_prime(data):
@@ -31,8 +32,7 @@ def logistic_prime(data):
     Returns:
         The result of the operation.
     """
-    output = logistic(data)
-    return output * (1.0 - output)
+    return 0.5 * ((1 / np.cosh(data / 2.0)) ** 2)
 
 
 def tan_h(data):
