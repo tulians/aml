@@ -12,10 +12,10 @@ import threshold as th
 import numpy as np
 
 
-class NeuralNetwork(object):
-    """Layer against layer neural network architecture."""
+class FeedforwardNeuralNetwork(object):
+    """Fully connected neural network architecture."""
 
-    def __init__(self, layers=[2, 2, 1], activation_function="logistic"):
+    def __init__(self, layers=[2, 2, 1], activation_function="tanh"):
         """Neural network class constructor.
 
         Args:
@@ -110,3 +110,15 @@ class NeuralNetwork(object):
                 layer = np.atleast_2d(activations[index])
                 delta = np.atleast_2d(deltas[index])
                 self.weights[index] += learning_rate * np.dot(layer.T, delta)
+
+    def predict(self, samples):
+        """Computes the output of the trained network given a dataset.
+
+        Args:
+            samples: data to compute the output from.
+
+        Returns:
+            No data is returned.
+        """
+        for sample in samples:
+            print(sample, self.feedforward(sample))

@@ -9,7 +9,7 @@
 import numpy as np
 
 
-def logistic(data, center=0, width=1):
+def logistic(data):
     """Performs the computation of an activation using the logistic function as
     sigmoid.
 
@@ -19,10 +19,10 @@ def logistic(data, center=0, width=1):
     Returns:
         The result of the operation.
     """
-    return 1.0 / (1.0 + np.exp((-data - center) / width))
+    return 1.0 / (1.0 + np.exp(-data))
 
 
-def logistic_prime(data, center=0, width=1):
+def logistic_prime(data):
     """Performs the derivative of the logistic function, using its property.
 
     Args:
@@ -31,10 +31,11 @@ def logistic_prime(data, center=0, width=1):
     Returns:
         The result of the operation.
     """
-    return logistic(data, center, width) * (1 - logistic(data, center, width))
+    output = logistic(data)
+    return output * (1.0 - output)
 
 
-def tan_h(data, center=0, width=1):
+def tan_h(data):
     """Performs the computation of an activation using the hyperbolic tangent
     function as sigmoid.
 
@@ -44,10 +45,10 @@ def tan_h(data, center=0, width=1):
     Returns:
         The result of the operation.
     """
-    return np.tanh((data - center) / width)
+    return np.tanh(data)
 
 
-def tanh_prime(data, center=0, width=1):
+def tan_h_prime(data):
     """Performs the derivative of the hyperbolic tangent function.
 
     Args:
@@ -57,7 +58,7 @@ def tanh_prime(data, center=0, width=1):
     Returns:
         The result of the operation.
     """
-    return 1.0 - tan_h(data, center, width) ** 2
+    return 1.0 - np.tanh(data) ** 2
 
 
 def unit_step(data, center=0):
@@ -111,6 +112,6 @@ activation_functions = {
 
 activation_derivatives = {
     "logistic": logistic_prime,
-    "tanh": tanh_prime,
+    "tanh": tan_h_prime,
     "relu": relu_prime
 }

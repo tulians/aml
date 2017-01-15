@@ -7,17 +7,13 @@
 
 # Third-party modules.
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def to_augmented_array(data):
-    """Generate the augmented data set, adding a column of '1's
-
-    Args:
-        data: M-dimensional array of samples.
-
-    Returns:
-        Returns the input vector in its augmented form.
-    """
+    """Generate the augmented data set, adding a column of '1's"""
+    if not isinstance(data, list):
+        data = [data]
     data = np.array(data)
     if data.size > 0:
         if data.ndim is 1:
@@ -31,3 +27,14 @@ def to_augmented_array(data):
     else:
         print("ERROR: An empty input vector was received. No bias unit should"
               " be added.")
+
+
+def normalize(data):
+    """Normalize the input vector to the range [0, 1]"""
+    return (data - np.min(data)) / float(np.max(data) - np.min(data))
+
+
+def display(domain, image):
+    """Displays a graph"""
+    plt.plot(domain, image)
+    plt.show()

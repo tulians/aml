@@ -50,7 +50,8 @@ $ pip install numpy
 ```
 
 ### Todos
-
+  - Bug in FNN training outputs, if the NN has 2 outputs and only 1-dim labels are provided, it still trains it.
+  - Misclassifications when using logistic functions as sigmoids.
 
 ### Version
 0.2
