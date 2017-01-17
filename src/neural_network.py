@@ -53,7 +53,7 @@ class FeedforwardNeuralNetwork(object):
             2 * np.random.random((layers[i] + 1, layers[i + 1])) - 1)
         return weights
 
-    def feedforward(self, sample):
+    def _feedforward(self, sample):
         """Computes the output of the network given a sample vector.
 
         Args:
@@ -121,4 +121,4 @@ class FeedforwardNeuralNetwork(object):
             No data is returned.
         """
         for sample in samples:
-            print(sample, self.feedforward(sample))
+            print(sample, self._feedforward(sample))

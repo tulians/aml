@@ -1,5 +1,5 @@
 # aml
-*aml* (accelerated machine learning) is a general purpose machine learning library aimed a code legibility, great execution speed and minimal dependencies. The only package needed is **NumPy**, which was chosen for its powerful linear algebra and N-dimensional array properties. It is currently under development, so any errors or non-optimal implementations will be fixed in further commits.
+*aml* (accelerated machine learning) is a general purpose machine learning library aimed a code legibility, great execution speed and minimal dependencies. One of the  needed packages is **NumPy**, which was chosen for its powerful linear algebra and N-dimensional array properties. This library is currently under development, so any errors or non-optimal implementations will be fixed in further commits.
 
 ### Examples
 #### Fully connected neural network
@@ -14,9 +14,7 @@
 >>> labels = [0, 1, 1, 0]
 >>> net.train(training_samples, labels)
 >>> # Test the network.
->>> for sample in training_samples:
-...    print(sample, net.feedforward(sample))
-...
+>>> net.predict(training_samples)
 ([0, 0], array([[ 0.00010954]]))
 ([0, 1], array([[ 0.99643299]]))
 ([1, 0], array([[ 0.99648988]]))
@@ -29,29 +27,27 @@ Imagine you need to learn a function like AND, OR, NOT, or any linearly separabl
 ```python
 >>> import perceptron as p
 >>> per = p.Perceptron(activation_function = "unitstep")
->>> data = [[0, 0],[0, 1],[1, 0],[1, 1]]
+>>> training_samples = [[0, 0],[0, 1],[1, 0],[1, 1]]
 >>> labels = [0, 0, 0, 1]
->>> per.train(data, labels)
+>>> per.train(training_samples, labels)
 >>> # Test the classifier.
->>> per.output([0, 0])
-0
->>> per.output([0, 1])
-0
->>> per.output([1, 0])
-0
->>> per.output([1, 1])
-1
+>>> for sample in training_samples:
+...   print(sample, per.output(sample))
+...
+([0, 0], 0)
+([0, 1], 0)
+([1, 0], 0)
+([1, 1], 1)
 ```
 
 ### Installation
-The only dependency needed for the library to work is **NumPy**. This package is generally already installed in many major Linux distros. In Mac OS X, it can be installed using **pip**:
+The only major dependency needed for the library to work is **NumPy**. This package is generally already installed in many major Linux distros. In Mac OS X, it can be installed using **pip**:
 ```sh
 $ pip install numpy
 ```
 
 ### Todos
   - Bug in FNN training outputs, if the NN has 2 outputs and only 1-dim labels are provided, it still trains it.
-  - Misclassifications when using logistic functions as sigmoids.
 
 ### Version
 0.2
