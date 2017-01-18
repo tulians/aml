@@ -47,7 +47,7 @@ $ pip install numpy
 ```
 
 ### Todos
-  - Bug in FNN training outputs, if the NN has 2 outputs and only 1-dim labels are provided, it still trains it.
+
 
 ### Version
 0.2

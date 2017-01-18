@@ -5,6 +5,8 @@
 
 """Provides an abstraction to generate neural networks."""
 
+# Built-in modules
+import sys
 # Project's modules
 import utils as u
 import threshold as th
@@ -47,10 +49,10 @@ class FeedforwardNeuralNetwork(object):
         """
         weights = []
         for i in range(1, len(layers) - 1):
-            weights.append(
-                2 * np.random.random((layers[i - 1] + 1, layers[i] + 1)) - 1)
-        weights.append(
-            2 * np.random.random((layers[i] + 1, layers[i + 1])) - 1)
+            weights.append(2 * np.random.random(
+                (layers[i - 1] + 1, layers[i] + 1)) - 1)
+        weights.append(2 * np.random.random(
+            (layers[i] + 1, layers[i + 1])) - 1)
         return weights
 
     def _feedforward(self, sample):
@@ -86,6 +88,13 @@ class FeedforwardNeuralNetwork(object):
         training_samples, _ = u.to_augmented_array(training_samples)
         labels = np.array(labels)
 
+        if labels.ndim != self.layers[-1]:
+            print("The entered labels do not have the same dimensions as the"
+                  " network output layer. These labels are {0}-dimensional"
+                  " while the output layer is {1}-dimensional.".format(
+                      labels.ndim, self.layers[-1]
+                  ))
+            sys.exit(0)
         for epoch in xrange(epochs):
             sample_index = np.random.randint(training_samples.shape[0])
             activations = [training_samples[sample_index]]

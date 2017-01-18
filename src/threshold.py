@@ -3,7 +3,7 @@
 # Author: Julian Ailan
 # ===================================
 
-"""Provides a set of threshold methods."""
+"""Provides a set of threshold functions."""
 
 # Third-party modules
 import numpy as np
