@@ -10,108 +10,105 @@ import numpy as np
 
 
 def logistic(data):
-    """Performs the computation of an activation using the logistic function as
-    sigmoid.
-
-    Args:
-        data: value to replace in the logistic function expression.
-
-    Returns:
-        The result of the operation.
-    """
     output = 1.0 / (1.0 + np.exp(-data))
     return (2 * output) - 1
 
 
 def logistic_prime(data):
-    """Performs the derivative of the logistic function, using its property.
-
-    Args:
-        data: value to replace in the logistic derivative function expression.
-
-    Returns:
-        The result of the operation.
-    """
     return 0.5 * ((1 / np.cosh(data / 2.0)) ** 2)
 
 
 def tan_h(data):
-    """Performs the computation of an activation using the hyperbolic tangent
-    function as sigmoid.
-
-    Args:
-        data: value to replace in the hyperbolic tangent function expression.
-
-    Returns:
-        The result of the operation.
-    """
     return np.tanh(data)
 
 
 def tan_h_prime(data):
-    """Performs the derivative of the hyperbolic tangent function.
-
-    Args:
-        data: value to replace in the hyperbolic tangent derivative function
-        expression.
-
-    Returns:
-        The result of the operation.
-    """
     return 1.0 - np.tanh(data) ** 2
 
 
 def unit_step(data, center=0):
-    """Simple unit-step function.
-
-    Args:
-        data: value along the step.
-
-    Returns:
-        The result of the operation.
-    """
     return 0 if data < center else 1
 
 
 def relu(data, epsilon=0.1):
-    """Leaky ReLU function.
-
-    Args:
-        data: value to replace in the max(epsilon, data) function.
-        epsilon: step to generate some error to backpropagate and avoid neuron
-        dying.
-
-    Returns:
-        The result of the Leaky ReLU operation.
-    """
     return np.maximum(epsilon * data, data)
 
 
 def relu_prime(data, epsilon=0.1):
-    """Performs the derivative of the Leaky ReLU operation.
-
-    Args:
-        data: value to replace in the max(epsilon, data) function.
-        epsilon: step to generate some error to backpropagate and avoid neuron
-        dying.
-
-    Returns:
-        gradients: The result of the Leaky ReLU derivative operation.
-    """
     gradients = 1. * (data > 0)
     gradients[gradients == 0] = epsilon
     return gradients
+
+
+def softsign(data):
+    return data / (1 + np.abs(data))
+
+
+def softsign_prime(data):
+    return 1 / ((1 + np.abs(data)) ** 2)
+
+
+def arctan(data):
+    return np.arctan(data)
+
+
+def arctan_prime(data):
+    return 1 / (1 + (data ** 2))
+
+
+def softplus(data):
+    return np.log(1 + np.exp(data))
+
+
+def softplus_prime(data):
+    return 1 / (1 + np.exp(-data))
+
+
+def bent_identity(data):
+    return ((np.sqrt((data ** 2) + 1) - 1) / 2) + data
+
+
+def bent_identity_prime(data):
+    return (data / (2 * np.sqrt((data ** 2) + 1))) + 1
+
+
+def sin_funct(data):
+    return np.sin(data)
+
+
+def sin_prime(data):
+    return np.cos(data)
+
+
+def identity(data):
+    return data
+
+
+def identity_prime(data):
+    return 1
 
 
 activation_functions = {
     "logistic": logistic,
     "tanh": tan_h,
     "unitstep": unit_step,
-    "relu": relu
+    "relu": relu,
+    "softsign": softsign,
+    "arctan": arctan,
+    "softplus": softplus,
+    "bentidentity": bent_identity,
+    "sin": sin_funct,
+    "identity": identity
 }
 
 activation_derivatives = {
     "logistic": logistic_prime,
     "tanh": tan_h_prime,
-    "relu": relu_prime
+    "relu": relu_prime,
+    "softsign": softsign_prime,
+    "arctan": arctan_prime,
+    "softplus": softplus_prime,
+    "bentidentity": bent_identity_prime,
+    "sin": sin_prime,
+    "identity": identity_prime,
 }
