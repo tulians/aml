@@ -27,7 +27,9 @@ Imagine you need to learn a function like AND, OR, NOT, or any linearly separabl
 ```python
 >>> import perceptron as p
 >>> per = p.Perceptron(activation_function = "unitstep")
->>> training_samples = [[0, 0],[0, 1],[1, 0],[1, 1]]
+>>> training_samples = [
+...    [0, 0], [0, 1], [1, 0], [1, 1]
+... ]
 >>> labels = [0, 0, 0, 1]
 >>> per.train(training_samples, labels)
 >>> # Test the classifier.
@@ -41,10 +43,31 @@ Imagine you need to learn a function like AND, OR, NOT, or any linearly separabl
 ```
 
 ### Installation
-The only major dependency needed for the library to work is **NumPy**. This package is generally already installed in many major Linux distros. In Mac OS X, it can be installed using **pip**:
+#### NumPy
+This package is generally already installed in many major Linux distros. In Mac OS X, it can be installed using **pip**:
 ```sh
 $ pip install numpy
 ```
+###### Windows
+As the [installation steps](https://docs.scipy.org/doc/numpy-1.10.0/user/install.html#windows) recommend, NumPy can be be automatically installed when using any scipy-stack compatible Python distribution, such as [WinPython](https://winpython.github.io/), [Python(x,y)](https://python-xy.github.io/), [Enthought Canopy](https://www.enthought.com/products/canopy/) or [Continuum Anaconda](https://www.continuum.io/downloads).
+
+#### Matplotlib
+The installation of this graphics package varies depending on the operating system:
+###### Debian based:
+```sh
+$ sudo apt-get install python-matplotlib
+```
+###### Fedora / Redhat
+```sh
+$ sudo yum install python-matplotlib
+```
+###### Mac OSX
+```sh
+$ python -m pip install -U pip setuptools
+$ python -m pip install matplotlib
+```
+###### Windows
+As in the case of NumPy, Matplotlib is included, along with many other packages, in the previously named solutions.
 
 ### Todos
 
