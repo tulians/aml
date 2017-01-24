@@ -12,15 +12,9 @@ import matplotlib.pyplot as plt
 
 def to_augmented_array(data):
     """Generate the augmented data set, adding a column of '1's"""
-    if not isinstance(data, list):
-        data = [data]
     data = np.array(data)
-    if data.size > 0:
-        if data.ndim is 1:
-            number_of_samples = 1
-            dimension = data.size
-        elif data.ndim is 2:
-            number_of_samples, dimension = data.shape
+    if len(data):
+        number_of_samples, dimension = data.shape
         augmented_data_set = np.ones((number_of_samples, dimension + 1))
         augmented_data_set[:, :-1] = data
         return augmented_data_set, dimension
@@ -38,3 +32,8 @@ def display(domain, image):
     """Displays a graph"""
     plt.plot(domain, image)
     plt.show()
+
+
+def mse(A, B):
+    """Mean squared errors."""
+    return np.sum((A - B) ** 2)

@@ -17,7 +17,7 @@ import numpy as np
 class FeedforwardNeuralNetwork(object):
     """Fully connected neural network architecture."""
 
-    def __init__(self, layers=[2, 2, 1], activation_function="tanh"):
+    def __init__(self, layers=[2, 2, 1], activation_function="bentidentity"):
         """Neural network class constructor.
 
         Args:
@@ -64,14 +64,14 @@ class FeedforwardNeuralNetwork(object):
         Returns:
             output: vector with output layer values.
         """
-        output, _ = u.to_augmented_array(sample)
+        output = sample
         for weight in xrange(len(self.weights)):
             output = self.activation_function(
                 np.dot(output, self.weights[weight]))
         return output
 
     def train(self, training_samples, labels, learning_rate=0.1,
-              epochs=10000):
+              epochs=100000, ret_error=True, tolerance=1e-25, display=False):
         """Trains the network using stochastic gradient descent (SGD).
 
         Args:
@@ -82,11 +82,14 @@ class FeedforwardNeuralNetwork(object):
             epochs: number of iterations to perform in SGD.
 
         Returns:
-            No data is returned.
+            If required, a list of squared sum of errors along epochs is
+            returned.
         """
         # Format vector inputs.
         training_samples, _ = u.to_augmented_array(training_samples)
         labels = np.array(labels)
+
+        training_error = []
 
         if labels.ndim != self.layers[-1]:
             print("The entered labels do not have the same dimensions as the"
@@ -120,6 +123,23 @@ class FeedforwardNeuralNetwork(object):
                 delta = np.atleast_2d(deltas[index])
                 self.weights[index] += learning_rate * np.dot(layer.T, delta)
 
+            if ret_error:
+                training_error.append(
+                    u.mse(
+                        self._feedforward(training_samples).T,
+                        labels
+                    ))
+                if len(training_error) > 1:
+                    if (abs(training_error[-1] - training_error[-2]) <
+                            tolerance):
+                        print("Exiting in epoch {0}.".format(epoch))
+                        break
+
+        if ret_error:
+            if display:
+                u.display(range(len(training_error)), training_error)
+            return training_error
+
     def predict(self, samples):
         """Computes the output of the trained network given a dataset.
 
@@ -129,5 +149,6 @@ class FeedforwardNeuralNetwork(object):
         Returns:
             No data is returned.
         """
+        samples, _ = u.to_augmented_array(samples)
         for sample in samples:
             print(sample, self._feedforward(sample))
