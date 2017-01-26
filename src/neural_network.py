@@ -71,7 +71,7 @@ class FeedforwardNeuralNetwork(object):
         return output
 
     def train(self, training_samples, labels, learning_rate=0.1,
-              epochs=100000, ret_error=True, tolerance=1e-25, display=False):
+              epochs=100000, ret_error=True, tolerance=1e-10, display=False):
         """Trains the network using stochastic gradient descent (SGD).
 
         Args:
@@ -90,14 +90,15 @@ class FeedforwardNeuralNetwork(object):
         labels = np.array(labels)
 
         training_error = []
+        labels_dims_matches = all([len(x) == self.layers[-1] for x in labels])
 
-        if labels.ndim != self.layers[-1]:
+        if not labels_dims_matches:
             print("The entered labels do not have the same dimensions as the"
                   " network output layer. These labels are {0}-dimensional"
                   " while the output layer is {1}-dimensional.".format(
                       labels.ndim, self.layers[-1]
                   ))
-            sys.exit(0)
+            return
         for epoch in xrange(epochs):
             sample_index = np.random.randint(training_samples.shape[0])
             activations = [training_samples[sample_index]]
@@ -126,7 +127,7 @@ class FeedforwardNeuralNetwork(object):
             if ret_error:
                 training_error.append(
                     u.mse(
-                        self._feedforward(training_samples).T,
+                        self._feedforward(training_samples),
                         labels
                     ))
                 if len(training_error) > 1:

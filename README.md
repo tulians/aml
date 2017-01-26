@@ -11,7 +11,7 @@
 >>> training_samples = [
 ...    [0, 0], [0, 1], [1, 0], [1, 1]
 ... ]
->>> labels = [0, 1, 1, 0]
+>>> labels = [[0], [1], [1], [0]]
 >>> net.train(training_samples, labels)
 >>> # Test the network.
 >>> net.predict(training_samples)
@@ -30,7 +30,7 @@ Imagine you need to learn a function like AND, OR, NOT, or any linearly separabl
 >>> training_samples = [
 ...    [0, 0], [0, 1], [1, 0], [1, 1]
 ... ]
->>> labels = [0, 0, 0, 1]
+>>> labels = [[0], [1], [1], [0]]
 >>> per.train(training_samples, labels)
 >>> # Test the classifier.
 >>> for sample in training_samples:
@@ -44,7 +44,8 @@ Imagine you need to learn a function like AND, OR, NOT, or any linearly separabl
 
 ### Installation
 #### NumPy
-This package is generally already installed in many major Linux distros. In Mac OS X, it can be installed using **pip**:
+##### Linux distributions and Mac OS X
+This package is generally already installed in many major Linux distributions. In Mac OS X, it can be installed using **pip**:
 ```sh
 $ pip install numpy
 ```
@@ -70,7 +71,8 @@ $ python -m pip install matplotlib
 As in the case of NumPy, Matplotlib is included, along with many other packages, in the previously named solutions.
 
 ### Todos
-
+  - Add a classifier NN class with softmax output, for multiclass classification.
+  - Add a regressor NN class with identity as AF in output layer.
 
 ### Version
 0.2

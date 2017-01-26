@@ -88,6 +88,12 @@ def identity_prime(data):
     return 1
 
 
+def softmax(x):
+    e_x = np.exp(x - np.max(x))
+    out = e_x / e_x.sum()
+    return out
+
+
 activation_functions = {
     "logistic": logistic,
     "tanh": tan_h,
