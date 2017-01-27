@@ -35,24 +35,24 @@ class FeedforwardNeuralNetwork(object):
         self.activation_function = th.activation_functions[activation_function]
         self.activation_derivative = th.activation_derivatives[
             activation_function]
-        self.weights = self._generate_weights(layers)
+        self.weights = self._generate_weights()
 
-    def _generate_weights(self, layers):
+    def _generate_weights(self):
         """Generates the network's synaptic weights. Bias weights are
         respectively added to the output list.
 
         Args:
-            layers: list which includes the number of units in each layer.
+            No input arguments.
 
         Returns:
             weights: list of synaptic weights.
         """
         weights = []
-        for i in range(1, len(layers) - 1):
+        for i in range(1, len(self.layers) - 1):
             weights.append(2 * np.random.random(
-                (layers[i - 1] + 1, layers[i] + 1)) - 1)
+                (self.layers[i - 1] + 1, self.layers[i] + 1)) - 1)
         weights.append(2 * np.random.random(
-            (layers[i] + 1, layers[i + 1])) - 1)
+            (self.layers[i] + 1, self.layers[i + 1])) - 1)
         return weights
 
     def _feedforward(self, sample):
@@ -153,3 +153,15 @@ class FeedforwardNeuralNetwork(object):
         samples, _ = u.to_augmented_array(samples)
         for sample in samples:
             print(sample, self._feedforward(sample))
+
+
+# class Classifier(FeedforwardNeuralNetwork):
+#    """Multiplayer perceptron classifier."""
+#    def __init__(self, layers=[2, 2, 1], activation_function="bentidentity"):
+#        FeedforwardNeuralNetwork.__init__(self, layers, activation_function)
+#
+#
+# class Regressor(FeedforwardNeuralNetwork):
+#    """Multiplayer perceptron regressor."""
+#    def __init__(self, layers=[2, 2, 1], activation_function="bentidentity"):
+#        FeedforwardNeuralNetwork.__init__(self, layers, activation_function)
