@@ -124,6 +124,7 @@ class PendingTasks(object):
             print("There is no current task with such id. Please check the" +
                   " id number of the task to mark as complete again.")
 
+    @property
     def refresh(self):
         """Saves pending changes in the pending.json file."""
         if self.unsaved_changes:
