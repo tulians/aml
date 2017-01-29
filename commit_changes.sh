@@ -7,8 +7,7 @@ git status
 
 echo "Commit description: '$description'"
 
-echo "Is the commit description correct? [y/n]:"
-read prompt
+read -p "Is the commit description correct? [y/n]: " prompt
 
 if [[ ("$prompt" == "Y") || ("$prompt" == "y") ]];
 then
