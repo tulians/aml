@@ -50,9 +50,9 @@ class FeedforwardNeuralNetwork(object):
         weights = []
         for i in range(1, len(self.layers) - 1):
             weights.append(2 * np.random.random(
-                (self.layers[i - 1] + 1, self.layers[i] + 1)) - 1)
+                (self.layers[i - 1], self.layers[i] + 1)) - 1)
         weights.append(2 * np.random.random(
-            (self.layers[i] + 1, self.layers[i + 1])) - 1)
+            (self.layers[i + 1], self.layers[i] + 1)) - 1)
         return weights
 
     def _feedforward(self, sample):
@@ -103,10 +103,15 @@ class FeedforwardNeuralNetwork(object):
             sample_index = np.random.randint(training_samples.shape[0])
             activations = [training_samples[sample_index]]
             # Forward pass.
-            for weight in xrange(len(self.weights)):
-                activations.append(
-                    self.activation_function(
-                        np.dot(activations[weight], self.weights[weight])))
+            for weight in xrange(len(self.weights) - 1):
+                # Aca puede estar el error. En la ultima sentencia del for.
+                input_to_layer = self.activation_function(
+                    np.dot(self.weights[weight], activations[weight]))
+                activations.append(np.append(input_to_layer, 1))
+            activations.append(
+                self.activation_function(
+                    np.dot(self.weights[weight + 1], activations[weight + 1]))
+            )
             # Backpropagation starts:
             # 1- Output layer weights compensation.
             dEtotal_wrt_dOutput = labels[sample_index] - activations[-1]
@@ -115,14 +120,15 @@ class FeedforwardNeuralNetwork(object):
             # 2- Hidden layers weights compensation.
             for layer in xrange(len(activations) - 2, 0, -1):
                 deltas.append(
-                    deltas[-1].dot(self.weights[layer].T) *
-                    self.activation_derivative(activations[layer]))
+                    deltas[-1].dot(self.weights[layer]) *
+                    self.activation_derivative(activations[layer])
+                )
             deltas.reverse()
             # 3- Weights update.
             for index in xrange(len(self.weights)):
                 layer = np.atleast_2d(activations[index])
                 delta = np.atleast_2d(deltas[index])
-                self.weights[index] += learning_rate * np.dot(layer.T, delta)
+                self.weights[index] += learning_rate * np.dot(layer, delta.T)
 
             if ret_error:
                 training_error.append(

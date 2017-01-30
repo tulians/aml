@@ -145,3 +145,99 @@ class PendingTasks(object):
             print("Changes applied to pending tasks file.")
         else:
             print("No changes have been made to the pending tasks file.")
+
+    def task_id(self, task_id):
+        task_id = str(task_id)
+        task = None
+
+        if task_id in self.completed_tasks:
+            task = (self.completed_tasks[task_id], "completed")
+        elif task_id in self.working_on:
+            task = (self.working_on[task_id], "in_progress")
+        elif task_id in self.not_started:
+            task = (self.not_started[task_id], "pending")
+
+        if task:
+            task_status = "Task #{} ".format(task_id)
+            if task[1] == "completed":
+                task_status += ("was completed on {}.".format(
+                    task[0]["completed"]))
+            elif task[1] == "in_progress":
+                task_status += "is still in progress."
+            else:
+                task_status += "was not started yet."
+
+            depends_from = task[0]["depends_from"]
+            depends_from = list_from_string(depends_from)
+
+            list_of_tasks = "Task #{} depends from ".format(task_id)
+            if depends_from:
+                if len(depends_from) == 1:
+                    list_of_tasks += "task #{}.".format(depends_from[0])
+                else:
+                    list_of_tasks += "tasks {}.".format(depends_from)
+#                    chars_to_remove = ["[", "]"]
+#                    for char in chars_to_remove:
+#                        list_of_tasks = list_of_tasks.replace(char, "")
+                    # Replace last comma with 'and'.
+#                    list_of_characters = list_of_tasks.rsplit(",", 1)
+#                    list_of_tasks = " and".join(list_of_characters)
+                    list_of_tasks = replace_last_comma(list_of_tasks)
+                still_cant_start = self.are_dependencies_completed(
+                    depends_from)
+                if still_cant_start:
+                    list_of_tasks += " Please complete "
+                    if len(still_cant_start) == 1:
+                        list_of_tasks += "task #{} first.".format(
+                            still_cant_start[0])
+                    else:
+                        list_of_tasks += "tasks {} first.".format(
+                            still_cant_start)
+                        list_of_tasks = replace_last_comma(list_of_tasks)
+                chars_to_remove = ["[", "]"]
+                for char in chars_to_remove:
+                    list_of_tasks = list_of_tasks.replace(char, "")
+
+            else:
+                list_of_tasks += "no preexisting task."
+
+            print("Task #{0}:\n"
+                  "- Description: {1}\n"
+                  "- Priority: {2}\n"
+                  "- Created at: {3}\n"
+                  "- Status: {4}\n"
+                  "- Dependencies: {5}\n".format(
+                      task_id,
+                      task[0]["task"],
+                      task[0]["priority"],
+                      task[0]["created_at"],
+                      task_status,
+                      list_of_tasks
+                  ))
+        else:
+            print("There is no task with id #{} in the list of"
+                  " tasks.".format(task_id))
+
+    def are_dependencies_completed(self, dependencies):
+        incomplete = []
+        for dep in dependencies:
+            task = str(dep)
+            if (task not in self.completed_tasks) or task in (
+                self.not_started or self.working_on
+            ):
+                incomplete.append(task)
+        return incomplete
+
+
+def list_from_string(string):
+    resulting_list = []
+    dont_include = ["[", "]", ","]
+    for char in string:
+        if char not in dont_include:
+            resulting_list.append(int(char))
+    return resulting_list
+
+
+def replace_last_comma(string):
+    list_of_characters = string.rsplit(",", 1)
+    return " and".join(list_of_characters)
