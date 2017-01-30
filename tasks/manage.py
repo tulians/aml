@@ -1,4 +1,4 @@
-# aml - Machine learning library.
+# tasks - Task management library.
 # Task management module.
 # Author: Julian Ailan
 # ===================================
@@ -9,6 +9,8 @@
 import os
 import json
 import time
+# Tasks modules.
+import utils as u
 
 
 class PendingTasks(object):
@@ -168,7 +170,7 @@ class PendingTasks(object):
                 task_status += "was not started yet."
 
             depends_from = task[0]["depends_from"]
-            depends_from = list_from_string(depends_from)
+            depends_from = u.list_from_string(depends_from)
 
             list_of_tasks = "Task #{} depends from ".format(task_id)
             if depends_from:
@@ -176,13 +178,7 @@ class PendingTasks(object):
                     list_of_tasks += "task #{}.".format(depends_from[0])
                 else:
                     list_of_tasks += "tasks {}.".format(depends_from)
-#                    chars_to_remove = ["[", "]"]
-#                    for char in chars_to_remove:
-#                        list_of_tasks = list_of_tasks.replace(char, "")
-                    # Replace last comma with 'and'.
-#                    list_of_characters = list_of_tasks.rsplit(",", 1)
-#                    list_of_tasks = " and".join(list_of_characters)
-                    list_of_tasks = replace_last_comma(list_of_tasks)
+                    list_of_tasks = u.replace_last_comma(list_of_tasks)
                 still_cant_start = self.are_dependencies_completed(
                     depends_from)
                 if still_cant_start:
@@ -193,7 +189,7 @@ class PendingTasks(object):
                     else:
                         list_of_tasks += "tasks {} first.".format(
                             still_cant_start)
-                        list_of_tasks = replace_last_comma(list_of_tasks)
+                        list_of_tasks = u.replace_last_comma(list_of_tasks)
                 chars_to_remove = ["[", "]"]
                 for char in chars_to_remove:
                     list_of_tasks = list_of_tasks.replace(char, "")
@@ -227,17 +223,3 @@ class PendingTasks(object):
             ):
                 incomplete.append(task)
         return incomplete
-
-
-def list_from_string(string):
-    resulting_list = []
-    dont_include = ["[", "]", ","]
-    for char in string:
-        if char not in dont_include:
-            resulting_list.append(int(char))
-    return resulting_list
-
-
-def replace_last_comma(string):
-    list_of_characters = string.rsplit(",", 1)
-    return " and".join(list_of_characters)
