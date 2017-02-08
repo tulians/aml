@@ -19,7 +19,6 @@ class FeedforwardNeuralNetwork(object):
 
     def __init__(self, layers=[2, 2, 1], activation_function="bentidentity"):
         """Neural network class constructor.
-
         Args:
             layers: list which includes the number of units in each layer. The
             first item on the list corresponds to the number of units in the
@@ -27,7 +26,6 @@ class FeedforwardNeuralNetwork(object):
             in the output layer. Thus, the numbers in between correspond to
             the units in the hidden layers.
             activation_function: sigmoid function to use as unit activation.
-
         Returns:
             No data is returned.
         """
@@ -40,27 +38,23 @@ class FeedforwardNeuralNetwork(object):
     def _generate_weights(self):
         """Generates the network's synaptic weights. Bias weights are
         respectively added to the output list.
-
         Args:
             No input arguments.
-
         Returns:
             weights: list of synaptic weights.
         """
         weights = []
         for i in range(1, len(self.layers) - 1):
             weights.append(2 * np.random.random(
-                (self.layers[i - 1], self.layers[i] + 1)) - 1)
+                (self.layers[i - 1] + 1, self.layers[i] + 1)) - 1)
         weights.append(2 * np.random.random(
-            (self.layers[i + 1], self.layers[i] + 1)) - 1)
+            (self.layers[i] + 1, self.layers[i + 1])) - 1)
         return weights
 
     def _feedforward(self, sample):
         """Computes the output of the network given a sample vector.
-
         Args:
             sample: input to the network.
-
         Returns:
             output: vector with output layer values.
         """
@@ -73,14 +67,12 @@ class FeedforwardNeuralNetwork(object):
     def train(self, training_samples, labels, learning_rate=0.1,
               epochs=100000, ret_error=True, tolerance=1e-10, display=False):
         """Trains the network using stochastic gradient descent (SGD).
-
         Args:
             training_samples: list of samples used to train the network's
             weights.
             labels: outputs associated to the training_samples.
             learning_rate: 'speed' at which the SGD algorithm learns.
             epochs: number of iterations to perform in SGD.
-
         Returns:
             If required, a list of squared sum of errors along epochs is
             returned.
@@ -103,15 +95,10 @@ class FeedforwardNeuralNetwork(object):
             sample_index = np.random.randint(training_samples.shape[0])
             activations = [training_samples[sample_index]]
             # Forward pass.
-            for weight in xrange(len(self.weights) - 1):
-                # Aca puede estar el error. En la ultima sentencia del for.
-                input_to_layer = self.activation_function(
-                    np.dot(self.weights[weight], activations[weight]))
-                activations.append(np.append(input_to_layer, 1))
-            activations.append(
-                self.activation_function(
-                    np.dot(self.weights[weight + 1], activations[weight + 1]))
-            )
+            for weight in xrange(len(self.weights)):
+                activations.append(
+                    self.activation_function(
+                        np.dot(activations[weight], self.weights[weight])))
             # Backpropagation starts:
             # 1- Output layer weights compensation.
             dEtotal_wrt_dOutput = labels[sample_index] - activations[-1]
@@ -120,15 +107,14 @@ class FeedforwardNeuralNetwork(object):
             # 2- Hidden layers weights compensation.
             for layer in xrange(len(activations) - 2, 0, -1):
                 deltas.append(
-                    deltas[-1].dot(self.weights[layer]) *
-                    self.activation_derivative(activations[layer])
-                )
+                    deltas[-1].dot(self.weights[layer].T) *
+                    self.activation_derivative(activations[layer]))
             deltas.reverse()
             # 3- Weights update.
             for index in xrange(len(self.weights)):
                 layer = np.atleast_2d(activations[index])
                 delta = np.atleast_2d(deltas[index])
-                self.weights[index] += learning_rate * np.dot(layer, delta.T)
+                self.weights[index] += learning_rate * np.dot(layer.T, delta)
 
             if ret_error:
                 training_error.append(
@@ -149,25 +135,11 @@ class FeedforwardNeuralNetwork(object):
 
     def predict(self, samples):
         """Computes the output of the trained network given a dataset.
-
         Args:
             samples: data to compute the output from.
-
         Returns:
             No data is returned.
         """
         samples, _ = u.to_augmented_array(samples)
         for sample in samples:
             print(sample, self._feedforward(sample))
-
-
-# class Classifier(FeedforwardNeuralNetwork):
-#    """Multiplayer perceptron classifier."""
-#    def __init__(self, layers=[2, 2, 1], activation_function="bentidentity"):
-#        FeedforwardNeuralNetwork.__init__(self, layers, activation_function)
-#
-#
-# class Regressor(FeedforwardNeuralNetwork):
-#    """Multiplayer perceptron regressor."""
-#    def __init__(self, layers=[2, 2, 1], activation_function="bentidentity"):
-#        FeedforwardNeuralNetwork.__init__(self, layers, activation_function)
