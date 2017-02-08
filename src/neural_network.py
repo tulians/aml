@@ -140,6 +140,8 @@ class FeedforwardNeuralNetwork(object):
         Returns:
             No data is returned.
         """
+        output = []
         samples, _ = u.to_augmented_array(samples)
         for sample in samples:
-            print(sample, self._feedforward(sample))
+            output.append(self._feedforward(sample))
+        return output
