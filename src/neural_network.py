@@ -138,8 +138,10 @@ class FeedforwardNeuralNetwork(object):
         Args:
             samples: data to compute the output from.
         Returns:
-            No data is returned.
+            output: predicted outputs for given dataset.
         """
+        output = []
         samples, _ = u.to_augmented_array(samples)
         for sample in samples:
-            print(sample, self._feedforward(sample))
+            output.append(self._feedforward(sample))
+        return output
