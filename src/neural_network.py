@@ -5,11 +5,10 @@
 
 """Provides an abstraction to generate neural networks."""
 
-# Built-in modules
-import sys
 # Project's modules
 import utils as u
 import threshold as th
+from training_methods import backpropagation
 # Third-party modules
 import numpy as np
 
@@ -64,74 +63,20 @@ class FeedforwardNeuralNetwork(object):
                 np.dot(output, self.weights[weight]))
         return output
 
-    def train(self, training_samples, labels, learning_rate=0.1,
-              epochs=100000, ret_error=True, tolerance=1e-10, display=False):
-        """Trains the network using stochastic gradient descent (SGD).
-        Args:
-            training_samples: list of samples used to train the network's
-            weights.
-            labels: outputs associated to the training_samples.
-            learning_rate: 'speed' at which the SGD algorithm learns.
-            epochs: number of iterations to perform in SGD.
-        Returns:
-            If required, a list of squared sum of errors along epochs is
-            returned.
-        """
-        # Format vector inputs.
+    def train(self, training_samples, labels, method="SGD",
+              cost_function=u.mse, learning_rate=0.1, epochs=100000,
+              ret_error=True, tolerance=1e-10, display=u.display):
+        # Format vector inputs and outputs
         training_samples, _ = u.to_augmented_array(training_samples)
         labels = np.array(labels)
 
-        training_error = []
-        labels_dims_matches = all([len(x) == self.layers[-1] for x in labels])
-
-        if not labels_dims_matches:
-            print("The entered labels do not have the same dimensions as the"
-                  " network output layer. These labels are {0}-dimensional"
-                  " while the output layer is {1}-dimensional.".format(
-                      labels.ndim, self.layers[-1]
-                  ))
-            return
-        for epoch in xrange(epochs):
-            sample_index = np.random.randint(training_samples.shape[0])
-            activations = [training_samples[sample_index]]
-            # Forward pass.
-            for weight in xrange(len(self.weights)):
-                activations.append(
-                    self.activation_function(
-                        np.dot(activations[weight], self.weights[weight])))
-            # Backpropagation starts:
-            # 1- Output layer weights compensation.
-            dEtotal_wrt_dOutput = labels[sample_index] - activations[-1]
-            dOutput_wrt_dInput = self.activation_derivative(activations[-1])
-            deltas = [dEtotal_wrt_dOutput * dOutput_wrt_dInput]
-            # 2- Hidden layers weights compensation.
-            for layer in xrange(len(activations) - 2, 0, -1):
-                deltas.append(
-                    deltas[-1].dot(self.weights[layer].T) *
-                    self.activation_derivative(activations[layer]))
-            deltas.reverse()
-            # 3- Weights update.
-            for index in xrange(len(self.weights)):
-                layer = np.atleast_2d(activations[index])
-                delta = np.atleast_2d(deltas[index])
-                self.weights[index] += learning_rate * np.dot(layer.T, delta)
-
-            if ret_error:
-                training_error.append(
-                    u.mse(
-                        self._feedforward(training_samples),
-                        labels
-                    ))
-                if len(training_error) > 1:
-                    if (abs(training_error[-1] - training_error[-2]) <
-                            tolerance):
-                        print("Exiting in epoch {0}.".format(epoch))
-                        break
-
-        if ret_error:
-            if display:
-                u.display(range(len(training_error)), training_error)
-            return training_error
+        training_method = backpropagation.methods[method]
+        return training_method(
+            self.layers, self.weights, self.activation_function,
+            self.activation_derivative, training_samples, labels,
+            self._feedforward, cost_function, learning_rate, epochs,
+            ret_error, tolerance, display
+        )
 
     def predict(self, samples):
         """Computes the output of the trained network given a dataset.

@@ -1,3 +1,0 @@
-Dependencies:
-  - numpy: pip install --user numpy
-  - matplotlib: apt-get install python-matplotlib
