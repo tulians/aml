@@ -1,6 +1,4 @@
-# aml - Machine learning library.
 # Threshold methods module.
-# Author: Julian Ailan
 # ===================================
 
 """Provides a set of threshold functions."""

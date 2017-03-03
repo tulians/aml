@@ -1,6 +1,4 @@
-# aml - Machine learning library.
 # Neural network module.
-# Author: Julian Ailan
 # ===================================
 
 """Provides an abstraction to generate neural networks."""

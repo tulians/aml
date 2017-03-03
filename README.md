@@ -1,9 +1,9 @@
-# aml
-*aml* (accelerated machine learning) is a general purpose machine learning library aimed a code legibility, great execution speed and minimal dependencies. One of the  needed packages is **NumPy**, which was chosen for its powerful linear algebra and N-dimensional array properties. This library is currently under development, so any errors or non-optimal implementations will be fixed in further commits.
+# nnbp
+*nnbp* (neural network with backpropagation) is a general purpose implementation of a feedforward neural network aimed at code legibility and minimal dependencies. One of the  needed packages is **NumPy**, which was chosen for its powerful linear algebra and N-dimensional array properties. This library is currently under development, so any errors or non-optimal implementations will be fixed in further commits.
 
 ### Examples
 #### Fully connected neural network
-*aml* provides a simple fully connected neural network which uses the classical backpropagation algorithm for learning. The paradigmatic XOR problem can be solved using these lines of code:
+*nnbp* provides a simple fully connected neural network which uses the classical backpropagation algorithm for learning. The paradigmatic XOR problem can be solved using these lines of code:
 
 ```python
 >>> import neural_network as nn
@@ -22,7 +22,7 @@
 ```
 
 #### Perceptron
-Imagine you need to learn a function like AND, OR, NOT, or any linearly separable boolean function, *aml* provides a **Perceptron** that is able to generate a separation surface among both classes. Taking the AND function as an example, the weights of the separation surface can be coded computed with these few lines:
+Imagine you need to learn a function like AND, OR, NOT, or any linearly separable boolean function, *nnbp* provides a **Perceptron** that is able to generate a separation surface among both classes. Taking the AND function as an example, the weights of the separation surface can be coded computed with these few lines:
 
 ```python
 >>> import perceptron as p

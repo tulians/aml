@@ -1,6 +1,4 @@
-# aml - Machine learning library.
 # Perceptron module.
-# Author: Julian Ailan
 # ===================================
 
 """Provides different implementations of perceptrons."""

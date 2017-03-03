@@ -1,6 +1,4 @@
-# aml - Machine learning library.
 # Backpropagation alternatives module.
-# Author: Julian Ailan
 # ===================================
 
 # Third-party modules

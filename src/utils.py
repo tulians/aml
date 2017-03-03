@@ -1,6 +1,4 @@
-# aml - Machine learning library.
 # Utilities module.
-# Author: Julian Ailan
 # ===================================
 
 """Provides a series of methods to simplify operations."""
