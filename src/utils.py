@@ -26,12 +26,6 @@ def normalize(data):
     return (data - np.min(data)) / float(np.max(data) - np.min(data))
 
 
-def display(domain, image):
-    """Displays a graph"""
-    plt.plot(domain, image)
-    plt.show()
-
-
 def mse(A, B):
     """Mean squared errors."""
     return np.sum((A - B) ** 2)
