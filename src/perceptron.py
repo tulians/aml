@@ -1,13 +1,11 @@
 # Perceptron module.
 # ===================================
 
-"""Provides different implementations of perceptrons."""
+"""Provides a traditional implementation of a perceptron."""
 
 # Project's modules
-import threshold as th
-import utils as u
-# Third-party modules
-import numpy as np
+from threshold import Threshold
+from databuffer import DataBuffer
 
 
 class Perceptron(object):
@@ -15,31 +13,26 @@ class Perceptron(object):
 
     def __init__(self, weights=None, activation_function="logistic"):
         """Perceptron class constructor.
-
-        Args:
-            weights: optional initial weights.
-            activation_function: sigmoid function to use in learning.
-
-        Returns:
-            No data is returned.
+        -->()
+            weights: Optional initial weights.
+            activation_function: Sigmoid function to use in learning.
+        ()-->
+            None.
         """
         self.weights = weights
-        self.activation_function = th.activation_functions[activation_function]
+        self.activation_function = Threshold(activation_function)
 
     def train(self, data_set, labels, learning_rate=0.1, epochs=50):
         """Computes the components of the weights vector 'w'.
-
-        Args:
+        -->()
             data_set: Array of M-dimensional samples.
             labels: Array of labels that represent the class of each sample.
-            learning_rate: 'speed' at which the perceptron learns.
-            epochs: number of iterations to perform in the learning algorithm.
-
-        Returns:
+            learning_rate: 'Speed' at which the perceptron learns.
+            epochs: Number of iterations to perform in the learning algorithm.
+        ()-->
             weights: Weights vector, containing the parameters of the
             hyperplane.
         """
-
         augmented_data_set, dimension = u.to_augmented_array(data_set)
         self.weights = 2 * np.random.rand(dimension + 1) - 1
 
@@ -53,11 +46,9 @@ class Perceptron(object):
 
     def output(self, input_sample):
         """Compute the output of the perceptron for a given sample input.
-
-        Args:
+        -->()
             input_sample: Input vector containing samples values.
-
-        Returns:
+        ()-->
             Returns the output of the activation function.
         """
 

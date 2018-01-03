@@ -1,9 +1,13 @@
-# Array data structure module.
+# DataBuffer data structure module.
 # ===================================
 
-class Array(list):
-    """Minimal extention of vanilla Python lists capabilities."""
+from urandom import getrandbits
 
+
+class DataBuffer(list):
+    """Minimal extention of vanilla Python list capabilities."""
+
+    # Algebraic
     def normalize(self):
         min_ = min(self)
         return (self - min_) / (max(self) - min_)
@@ -14,7 +18,22 @@ class Array(list):
     def mse(self, other):
         if isinstance(other, (list, tuple)):
             return sum((self - other) ** 2)
+        raise TypeError('cannot operate with a non-sequence object')
+    
+    def dot(self, other):
+        return sum(i * j for i, j in zip(self, other))
 
+    def randomize(self, randdims):
+        bits, n_elem = 8, 1
+        if self is not []: del self[:]
+        for n in randdims: n_elem *= n
+        for _ in range(randdims[0]):
+            self.append(DataBuffer([
+                ((getrandbits(bits) / (2 ** bits)) * 2) - 1
+                for _ in range(n_elem // randdims[0])
+            ]))
+
+    # Private
     # ESP8266 implementation of Micropython does not have operator.py. 
     def __sub__(self, other):
         def _sub(a, b): return a - b
@@ -40,6 +59,7 @@ class Array(list):
         # ESP8266 implementation of Micropython does not have Sequence type.
         if isinstance(other, (list, tuple)):
             if len(other) == len(self):
-                return Array(op(a, b) for a, b in zip(self, other))
+                return DataBuffer(op(a, b) for a, b in zip(self, other))
             raise ValueError('cannot operate on a sequence of unequal length')
-        return Array(op(a, other) for a in self)
+        # In case `other` is a Number. 
+        return DataBuffer(op(a, other) for a in self)
