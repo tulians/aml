@@ -11,7 +11,7 @@ from databuffer import DataBuffer
 class Perceptron(object):
     """Classic perceptron implementation."""
 
-    def __init__(self, weights=None, activation_function="logistic"):
+    def __init__(self, weights=DataBuffer(), activation_function="logistic"):
         """Perceptron class constructor.
         -->()
             weights: Optional initial weights.
@@ -33,16 +33,19 @@ class Perceptron(object):
             weights: Weights vector, containing the parameters of the
             hyperplane.
         """
-        augmented_data_set, dimension = u.to_augmented_array(data_set)
-        self.weights = 2 * np.random.rand(dimension + 1) - 1
+        data_set.augment()
+        self.weights.randomize()
+        print(data_set, self.weights)
+#        augmented_data_set, dimension = u.to_augmented_array(data_set)
+#        self.weights = 2 * np.random.rand(dimension + 1) - 1
 
-        for _ in xrange(epochs):
-            for sample, target in zip(augmented_data_set, labels):
-                predicted_output = self.activation_function(
-                    np.dot(self.weights, sample))
-                update = (learning_rate * (target - predicted_output) *
-                          sample)
-                self.weights += update
+#        for _ in xrange(epochs):
+#            for sample, target in zip(augmented_data_set, labels):
+#                predicted_output = self.activation_function(
+#                    np.dot(self.weights, sample))
+#                update = (learning_rate * (target - predicted_output) *
+#                          sample)
+#                self.weights += update
 
     def output(self, input_sample):
         """Compute the output of the perceptron for a given sample input.
